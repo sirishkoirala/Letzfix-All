@@ -1,0 +1,9 @@
+export const SEQUELIZE = 'SEQUELIZE';
+export const DEVELOPMENT = 'development';
+export const TEST = 'test';
+export const PRODUCTION = 'production';
+export const USER_REPOSITORY = 'USER_REPOSITORY';
+export const DEVICES_REPOSITORY = 'DEVICE_REPOSITORY';
+export const PHONES_REPOSITORY = 'PHONES_REPOSITORY';
+export const PHONE_MODEL_REPOSITORY = 'PHONE_MODEL_REPOSITORY ';
+export const SMARTPHONES_REPOSITORY = 'SMARTPHONE_REPOSITORY';

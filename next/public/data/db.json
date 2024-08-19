@@ -1,0 +1,192 @@
+{
+   "devices": [
+      {
+         "id": "device1",
+         "name": "Laptop",
+         "image": "/devices/laptop.png",
+         "url": "/laptop"
+      },
+      {
+         "id": "device2",
+         "name": "Phone",
+         "image": "/devices/phone.png",
+         "url": "/smartphones"
+      },
+      {
+         "id": "device3",
+         "name": "Tablets",
+         "image": "/devices/tablet.png",
+         "url": "/tablets"
+      },
+      {
+         "id": "device4",
+         "name": "Game console",
+         "image": "/devices/gameconsole.png",
+         "url": "/gameconsoles"
+      },
+      {
+         "id": "device5",
+         "name": "Something else",
+         "image": "/devices/something.png",
+         "url": "/somethingelse"
+      }
+   ],
+
+   "smart-phones": [
+      {
+         "id": 1,
+         "name": "iPhone Repair",
+         "image": "/smart-phones/iphone.png",
+         "url": "/smartphones/iphone"
+      },
+      {
+         "id": 2,
+         "name": "Samsung Repair",
+         "image": "/smart-phones/galaxy.png",
+         "url": "/smartphones/samsung-galaxy"
+      },
+      {
+         "id": 3,
+         "name": "Google Repair",
+         "image": "/smart-phones/pixel.png",
+         " url": "/smartphones/google-pixel"
+      },
+      {
+         "id": 4,
+         "name": "iPad Repaid",
+         "image": "/smart-phones/ipad.png",
+         "url": "/ipad"
+      },
+      {
+         "id": 5,
+         "name": "Cell Phone Repair",
+         "image": "/smart-phones/cellphone.png",
+         "url": "/smartphones"
+      },
+      {
+         "id": 6,
+         "name": "Tablet Repair",
+         "image": "/smart-phones/tablet.png",
+         "url": "/tablet"
+      },
+      {
+         "id": 7,
+         "name": "Computer Repair",
+         "image": "/smart-phones/computer.png",
+         "url": "/laptop"
+      },
+      {
+         "id": 8,
+         "name": "Game Console Repair",
+         "image": "/smart-phones/game-console.png",
+         "url": "/game-console"
+      }
+   ],
+   "phones": [
+      {
+         "id": 1,
+         "name": "iPhone",
+         "image": "/smartphones/iphone.jpeg",
+         "url": "/smartphones/iphone",
+         "models": [
+            {
+               "model_id": 1,
+               "name": "iPhone 15 Pro Max",
+               "url": "/smartphones/iphone/iphone-15-pro-max"
+            },
+            {
+               "model_id": 2,
+               "name": "iPhone 15 Pro",
+               "url": "/smartphones/iphone/iphone-15-pro"
+            },
+            {
+               "model_id": 3,
+               "name": "iPhone 15",
+               "url": "/smartphones/iphone/iphone-15"
+            },
+            {
+               "model_id": 4,
+               "name": "iPhone 14 Pro Max",
+               "url": "/smartphones/iphone/iphone-14-pro-max"
+            }
+         ]
+      },
+      {
+         "id": 2,
+         "name": "Samsung",
+         "image": "/smartphones/samsung.png",
+         "url": "/smartphones/samsung-galaxy",
+         "models": [
+            {
+               "model_id": 1,
+               "name": "Samsung Galaxy S23 Ultra",
+               "url": "/smartphones/samsung-galaxy/s23-ultra"
+            },
+            {
+               "model_id": 2,
+               "name": "Samsung Galaxy S23+",
+               "url": "/smartphones/samsung-galaxy/s23-plus"
+            },
+            {
+               "model_id": 3,
+               "name": "Samsung Galaxy S23",
+               "url": "/smartphones/samsung-galaxy/s23"
+            }
+         ]
+      },
+      {
+         "id": 3,
+         "name": "Google Pixel",
+         "image": "/smartphones/pixel.png",
+         "url": "/smartphones/google-pixel",
+         "models": [
+            {
+               "model_id": 1,
+               "name": "Google Pixel 7 Pro",
+               "url": "/smartphones/google-pixel/pixel-7-pro"
+            },
+            {
+               "model_id": 2,
+               "name": "Google Pixel 7",
+               "url": "/smartphones/google-pixel/pixel-7"
+            }
+         ]
+      },
+      {
+         "id": 4,
+         "name": "Motorola",
+         "image": "/smartphones/motorola.jpeg",
+         "url": "/smartphones/motorola",
+         "models": [
+            {
+               "model_id": 1,
+               "name": "Motorola Edge 40",
+               "url": "/smartphones/motorola/edge-40"
+            },
+            {
+               "model_id": 2,
+               "name": "Motorola Moto G Power",
+               "url": "/smartphones/motorola/moto-g-power"
+            }
+         ]
+      },
+      {
+         "id": 5,
+         "name": "LG",
+         "image": "/smartphones/LG.png",
+         "url": "/smartphones/lg",
+         "models": [
+            {
+               "model_id": 1,
+               "name": "LG Wing",
+               "url": "/smartphones/lg/wing"
+            },
+            {
+               "model_id": 2,
+               "name": "LG Velvet",
+               "url": "/smartphones/lg/velvet"
+            }
+         ]
+      }
+   ]
+}
