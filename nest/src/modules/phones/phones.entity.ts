@@ -1,20 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PhoneModelEntity } from '../phone-model/phone-model.entity';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { PhoneModelEntity } from '../phone-models/phone-models.entity';
 
-@Entity('phones')
-export class PhonesEntity {
-  @PrimaryGeneratedColumn()
+@Table({ tableName: 'phones' })
+export class PhonesEntity extends Model<PhonesEntity> {
+  @Column({
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  })
   id: number;
 
-  @Column()
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   name: string;
 
-  @Column()
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   image: string;
 
-  @Column()
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   url: string;
 
-  @OneToMany(() => PhoneModelEntity, (model) => model.phone)
+  @HasMany(() => PhoneModelEntity)
   models: PhoneModelEntity[];
 }

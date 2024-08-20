@@ -5,10 +5,12 @@ import { usePhones } from "../hooks/usePhones";
 import Skeleton from "react-loading-skeleton";
 import { Device, DeviceModel } from "../types/deviceTypes";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 const DeviceSelection = () => {
    const { Smartphones, isLoading, isError } = usePhones();
    const [models, setModels] = useState<DeviceModel[]>([]);
+   const router = useRouter();
 
    const {
       register,
@@ -17,8 +19,9 @@ const DeviceSelection = () => {
    } = useForm();
 
    const handlePhoneChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedId = event.target.value;
-      const selectedPhone = Smartphones.find((phone: Device) => phone.id === selectedId);
+      const selectedId = parseInt(event.target.value);
+
+      const selectedPhone = Smartphones.find((phone: Device) => parseInt(phone.id) === selectedId);
       if (selectedPhone) {
          setModels(selectedPhone.models);
       } else {
@@ -27,7 +30,16 @@ const DeviceSelection = () => {
    };
 
    const onSubmit = (data: any) => {
-      console.log("Selection :", data);
+      const selectedPhone = Smartphones.find((phone: Device) => parseInt(phone.id) === parseInt(data.device));
+      const selectedModel = models.find((model: DeviceModel) => parseInt(model.model_id) === parseInt(data.model));
+
+      //localStorage
+      if (selectedPhone && selectedModel) {
+         localStorage.setItem("selectedDevice", selectedPhone.name);
+         localStorage.setItem("selectedModel", selectedModel.name);
+      }
+
+      router.push("/repairs/damage-type");
    };
 
    if (isLoading)
@@ -36,7 +48,6 @@ const DeviceSelection = () => {
             <Skeleton count={12} />
          </div>
       );
-
    if (isError) return <div>Error...</div>;
 
    return (
@@ -58,7 +69,7 @@ const DeviceSelection = () => {
                            onChange={handlePhoneChange}
                         >
                            <option value="" disabled selected>
-                              Brand
+                              Select a brand
                            </option>
                            {Smartphones && Smartphones.length > 0 ? (
                               Smartphones.map((phone: Device) => (
@@ -76,6 +87,7 @@ const DeviceSelection = () => {
                      </div>
                      {errors.device && <p className="text-red-500 mt-2">Please select a device brand.</p>}
                   </div>
+
                   {models.length > 0 && (
                      <div className="mt-4 mr-14">
                         <div className="relative inline-block w-full">
@@ -86,7 +98,7 @@ const DeviceSelection = () => {
                               {...register("model", { required: true })}
                            >
                               <option value="" disabled selected>
-                                 Model
+                                 Select a model
                               </option>
                               {models.map((model: DeviceModel) => (
                                  <option key={model.model_id} value={model.model_id}>

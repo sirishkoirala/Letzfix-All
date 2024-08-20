@@ -7,6 +7,9 @@ import { UsersModule } from './modules/users/users.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { SmartPhonesModule } from './modules/smartphone/smartphones.module';
 import { DevicesModule } from './modules/devices/devices.module';
+import { PhoneModelModule } from './modules/phone-models/phone-models.module';
+import { PhonesModule } from './modules/phones/phones.module';
+import { CustomerModule } from './modules/customer/customer.module';
 
 @Module({
   // imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule,SmartPhoneModule],
@@ -24,6 +27,9 @@ import { DevicesModule } from './modules/devices/devices.module';
     DevicesModule,
     SmartPhonesModule,
     UsersModule,
+    PhoneModelModule,
+    PhonesModule,
+    CustomerModule
   ],
   controllers: [AppController],
   providers: [AppService],

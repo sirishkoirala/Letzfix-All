@@ -12,5 +12,4 @@ export function usePhones() {
       isLoading,
       isError: error
    }
-
 }

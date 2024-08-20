@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, AutoIncrement } from 'sequelize-typescript';
 
 @Table({ tableName: 'devices' })
 export class Devices extends Model<Devices> {
@@ -6,6 +6,7 @@ export class Devices extends Model<Devices> {
     type: DataType.STRING,
     allowNull: false,
     primaryKey: true,
+    autoIncrement: false
   })
   id: string;
 

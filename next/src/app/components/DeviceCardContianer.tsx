@@ -37,7 +37,7 @@ const DeviceCardContainer = () => {
                >
                   <img src={device.image} alt={device.name} className="h-36 w-36 mx-auto object-fill" />
                   <div className="flex items-center justify-center gap-1">
-                     <p className="text-base">Hello {device.name}</p>
+                     <p className="text-base">{device.name}</p>
                      <IconChevronRight stroke={2} size={19} color="teal" />
                   </div>
                </div>
