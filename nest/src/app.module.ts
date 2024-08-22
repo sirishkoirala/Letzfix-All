@@ -12,6 +12,7 @@ import { PhonesModule } from './modules/phones/phones.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { FaultsModule } from './modules/faults/faults.module';
 import { StoresModule } from './modules/stores/stores.module';
+import { AppointmentModule } from './modules/appointment/appointment.module';
 
 @Module({
   // imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule,SmartPhoneModule],
@@ -33,7 +34,8 @@ import { StoresModule } from './modules/stores/stores.module';
     PhonesModule,
     CustomerModule,
     FaultsModule,
-    StoresModule
+    StoresModule,
+    AppointmentModule
   ],
   controllers: [AppController],
   providers: [AppService],

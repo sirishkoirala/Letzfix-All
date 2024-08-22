@@ -12,19 +12,10 @@ const CustomerDetails = () => {
    const [phone, setPhone] = useState<string>("");
    const router = useRouter();
 
-   // const { customer, isLoading, isError } = useCustomer();
-
-   // if (isLoading)
-   //    return (
-   //       <div className="containers">
-   //          <Skeleton count={8} />
-   //       </div>
-   //    );
-
-   // if (isError) return <div>Failed to load devices</div>;
-
    const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
+
+      localStorage.setItem("customer_fname", firstName);
 
       const customerDetails = {
          customer_fname: firstName,
@@ -51,7 +42,6 @@ const CustomerDetails = () => {
          console.error("An error occurred", error);
       }
    };
-
 
    return (
       <div className="pt-14">

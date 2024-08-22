@@ -13,8 +13,8 @@ type CustomerDetails = {
 };
 
 type SelectedCity = {
-   name: string;
-   location: string;
+   store_city: string;
+   store_address: string;
 };
 
 type DamageData = {
@@ -97,8 +97,8 @@ const DeviceSummary = () => {
                      Store location
                   </p>
                   <div className="ml-9">
-                     <p className="text-[15px] text-gray-600">{selectedCity?.name || ""}</p>
-                     <p className="text-[15px] text-gray-600">{selectedCity?.location || ""}</p>
+                     <p className="text-[15px] text-gray-600">{selectedCity?.store_city || ""}</p>
+                     <p className="text-[15px] text-gray-600">{selectedCity?.store_address || ""}</p>
                   </div>
                </li>
                <li>
