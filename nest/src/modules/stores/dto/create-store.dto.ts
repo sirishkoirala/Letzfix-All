@@ -1,11 +1,10 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-
 export class CreateStoreDto {
-  @IsNotEmpty()
-  @IsString()
-  store_city: string;
-
-  @IsNotEmpty()
-  @IsString()
-  store_address: string;
+   readonly name: string;
+   readonly address1: string;
+   readonly address2: string;
+   readonly city: string;
+   readonly state: string;
+   readonly country: string;
+   readonly postcode: string;
+   readonly phone: string;
 }

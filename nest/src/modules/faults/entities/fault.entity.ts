@@ -1,35 +1,15 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  ForeignKey,
-  BelongsTo,
-} from 'sequelize-typescript';
-// import { Devices } from './../../devices/devices.entity';
+import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { Device } from 'src/modules/devices/entities/device.entity';
 
 @Table({ tableName: 'faults' })
 export class Fault extends Model<Fault> {
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  fault_id: number;
+  @Column({ primaryKey: true, autoIncrement: true })
+  id: number;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  description: string;
+  @Column
+  name: string;
 
-//   @ForeignKey(() => Devices)
-//   @Column({
-//     type: DataType.STRING,
-//     allowNull: false,
-//   })
-//   device_id: string;
-
-//   @BelongsTo(() => Devices)
-//   device: Devices;
+  @ForeignKey(() => Device)
+  @Column
+  deviceId: number;
 }

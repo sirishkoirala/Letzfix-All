@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Devices } from './devices.entity';
 import { DevicesService } from './devices.service';
 import { DevicesController } from './devices.controller';
-import { devicesProviders } from './devices.providers';
+import { Device } from './entities/device.entity';
+import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Devices])],
-  providers: [DevicesService, ...devicesProviders],
+  imports: [SequelizeModule.forFeature([Device])],
   controllers: [DevicesController],
+  providers: [DevicesService],
 })
 export class DevicesModule {}

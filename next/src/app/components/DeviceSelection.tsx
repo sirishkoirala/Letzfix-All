@@ -1,14 +1,16 @@
 "use client";
 import { IconArrowNarrowLeft, IconChevronDown } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { usePhones } from "../hooks/usePhones";
+import { useDeviceBrand } from "../hooks/useDeviceBrand";
+import { useDeviceModel } from "../hooks/useDeviceModel";
 import Skeleton from "react-loading-skeleton";
 import { Device, DeviceModel } from "../types/deviceTypes";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 const DeviceSelection = () => {
-   const { Smartphones, isLoading, isError } = usePhones();
+   const { Brands, isLoading, isError } = useDeviceBrand();
+   
    const [models, setModels] = useState<DeviceModel[]>([]);
    const router = useRouter();
 
@@ -21,7 +23,7 @@ const DeviceSelection = () => {
    const handlePhoneChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedId = parseInt(event.target.value);
 
-      const selectedPhone = Smartphones.find((phone: Device) => parseInt(phone.id) === selectedId);
+      const selectedPhone = Brands.find((phone: Device) => parseInt(phone.id) === selectedId);
       if (selectedPhone) {
          setModels(selectedPhone.models);
       } else {
@@ -30,7 +32,7 @@ const DeviceSelection = () => {
    };
 
    const onSubmit = (data: any) => {
-      const selectedPhone = Smartphones.find((phone: Device) => parseInt(phone.id) === parseInt(data.device));
+      const selectedPhone = Brands.find((phone: Device) => parseInt(phone.id) === parseInt(data.device));
       const selectedModel = models.find((model: DeviceModel) => parseInt(model.model_id) === parseInt(data.model));
 
       //localStorage
@@ -71,8 +73,8 @@ const DeviceSelection = () => {
                            <option value="" disabled selected>
                               Select a brand
                            </option>
-                           {Smartphones && Smartphones.length > 0 ? (
-                              Smartphones.map((phone: Device) => (
+                           {Brands && Brands.length > 0 ? (
+                              Brands.map((phone: Device) => (
                                  <option key={phone.id} value={phone.id}>
                                     {phone.name}
                                  </option>

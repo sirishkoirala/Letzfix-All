@@ -6,7 +6,7 @@ export function useStores() {
    const url = `${API_HOST}/stores`;
    const { data, error, isLoading } = useSWR(url, fetcher)
    return {
-      cities: data,
+      locations: data,
       isLoading,
       isError: !!error,
    }

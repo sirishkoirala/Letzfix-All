@@ -15,13 +15,13 @@ const CustomerDetails = () => {
    const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
 
-      localStorage.setItem("customer_fname", firstName);
+      localStorage.setItem("fname", firstName);
 
       const customerDetails = {
-         customer_fname: firstName,
-         customer_lname: lastName,
-         customer_email: email,
-         customer_phone: phone,
+         fname: firstName,
+         lname: lastName,
+         email: email,
+         phone: phone,
       };
 
       try {

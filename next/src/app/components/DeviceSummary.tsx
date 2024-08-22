@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { IconCheck, IconClock12, IconMapPin, IconMessage2 } from "@tabler/icons-react";
 import { Tsmartphones } from "../types/Tsmartphones";
-import { usePhones } from "../hooks/usePhones";
+import { useDeviceBrand } from "../hooks/useDeviceBrand";
 import Skeleton from "react-loading-skeleton";
 
 type CustomerDetails = {
@@ -32,7 +32,7 @@ type DataState = {
 };
 
 const DeviceSummary = () => {
-   const { Smartphones, isLoading, isError } = usePhones();
+   const { Brands, isLoading, isError } = useDeviceBrand();
    const [data, setData] = useState<DataState | null>(null);
 
    useEffect(() => {
@@ -69,7 +69,7 @@ const DeviceSummary = () => {
       return <div>Error...</div>;
    }
 
-   const phoneImage: Tsmartphones | undefined = Smartphones.find(
+   const phoneImage: Tsmartphones | undefined = Brands.find(
       (phone: Tsmartphones) => phone.name === data?.selectedDevice
    );
    const { damageData, selectedModel, customerDetails, selectedCity, selectedDate, selectedTime } = data || {};

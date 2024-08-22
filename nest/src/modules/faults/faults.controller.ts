@@ -22,13 +22,4 @@ export class FaultsController {
     return this.faultsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFaultDto: UpdateFaultDto) {
-    return this.faultsService.update(+id, updateFaultDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.faultsService.remove(+id);
-  }
 }

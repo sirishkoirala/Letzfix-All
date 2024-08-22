@@ -1,19 +1,25 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
-import { Store } from './entities/store.entity';
 
 @Controller('stores')
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
   @Post()
-  async create(@Body() createStoreDto: CreateStoreDto): Promise<Store> {
+  create(@Body() createStoreDto: CreateStoreDto) {
     return this.storesService.create(createStoreDto);
   }
 
   @Get()
-  async findAll(): Promise<Store[]> {
+  findAll() {
     return this.storesService.findAll();
   }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.storesService.findOne(+id);
+  }
+
+
 }

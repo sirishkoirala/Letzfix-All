@@ -1,41 +1,30 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Devices } from './devices.entity';
-import { CreateDevicesDto, UpdateDevicesDto } from './dto/devices.dto';
+import { Injectable } from '@nestjs/common';
+import { CreateDeviceDto } from './dto/create-device.dto';
+import { UpdateDeviceDto } from './dto/update-device.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Device } from './entities/device.entity';
 
 @Injectable()
 export class DevicesService {
   constructor(
-    @Inject('DEVICES_REPOSITORY')
-    private readonly devicesRepository: typeof Devices,
+    @InjectModel(Device)
+    private readonly deviceModel: typeof Device,
   ) {}
 
-  create(createDeviceDto: CreateDevicesDto): Promise<Devices> {
-    return this.devicesRepository.create(createDeviceDto);
+  async create(createDeviceDto: CreateDeviceDto): Promise<Device> {
+    const device = new Device();
+    device.name = createDeviceDto.name;
+    device.image = createDeviceDto.image;
+    device.url = createDeviceDto.url;
+
+    return await device.save();
   }
 
-  findAll(): Promise<Devices[]> {
-    return this.devicesRepository.findAll();
+  async findAll(): Promise<Device[]> {
+    return await this.deviceModel.findAll();
   }
 
-  findOne(id: string): Promise<Devices> {
-    return this.devicesRepository.findOne({
-      where: { id },
-    });
-  }
-
-  update(
-    id: string,
-    updateDevicesDto: UpdateDevicesDto,
-  ): Promise<[number, Devices[]]> {
-    return this.devicesRepository.update(updateDevicesDto, {
-      where: { id },
-      returning: true,
-    });
-  }
-
-  delete(id: string): Promise<number> {
-    return this.devicesRepository.destroy({
-      where: { id },
-    });
+  async findOne(id: number) : Promise<Device> {
+    return await this.deviceModel.findByPk(id);
   }
 }

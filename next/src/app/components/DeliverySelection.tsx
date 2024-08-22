@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { useStores } from "./../hooks/useStores";
 import Skeleton from "react-loading-skeleton";
 
-interface City {
-   store_city: string;
-   store_address: string;
+interface Tlocation {
+   city: string;
+   address: string;
 }
 
 const DeliverySelection = () => {
    const [searchTerm, setSearchTerm] = useState<string>("");
-   const { cities = [], isLoading, isError } = useStores();
+   const { locations = [], isLoading, isError } = useStores();
    if (isLoading)
       return (
          <div className="containers">
@@ -24,13 +24,13 @@ const DeliverySelection = () => {
 
    const router = useRouter();
 
-   const filteredCities = (cities || []).filter((city: City) => {
-      return city.store_city && city.store_city.toLowerCase().includes(searchTerm.toLowerCase());
+   const filteredlocation = (locations || []).filter((location: Tlocation) => {
+      return location.city && location.city.toLowerCase().includes(searchTerm.toLowerCase());
    });
 
-   const handleCityClick = (city: City) => {
+   const handleCityClick = (location: Tlocation) => {
       // console.log(city);
-      localStorage.setItem("selectedCity", JSON.stringify(city));
+      localStorage.setItem("selectedCity", JSON.stringify(location));
       router.push("/repairs/appointment-time");
    };
 
@@ -55,21 +55,21 @@ const DeliverySelection = () => {
                   </div>
                </div>
                <div className="pb-20">
-                  {filteredCities.length > 0 ? (
-                     filteredCities.map((city: City, index: number) => (
+                  {filteredlocation.length > 0 ? (
+                     filteredlocation.map((location: Tlocation, index: number) => (
                         <div
                            className="flex items-center justify-between mt-3 appearance-none w-full bg-background border-2 text-black py-3 px-4 pr-8 rounded-lg leading-tight focus:outline focus:bg-white hover:border-black cursor-pointer"
                            key={index}
-                           onClick={() => handleCityClick(city)}
+                           onClick={() => handleCityClick(location)}
                         >
                            <div>
                               <div className="flex items-center gap-2 mt-2">
                                  <p className="h-4 w-4 bg-teal-700 rounded-full text-white text-[14px]">
                                     &nbsp;{index + 1}
                                  </p>
-                                 <p className="text-[26px] leading-[29px] font-light tracking-tight">{city.store_city}</p>
+                                 <p className="text-[26px] leading-[29px] font-light tracking-tight">{location.city}</p>
                               </div>
-                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{city.store_address}</p>
+                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{location.address}</p>
                               <div className="flex gap-4 mt-2">
                                  <p className="text-[14px] leading-[17px] text-gray-600">Next available</p>
                                  <p className="text-[14px] leading-[17px] text-[#0b8350] font-bold">today, 9:00am</p>

@@ -1,23 +1,31 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'stores' })
 export class Store extends Model<Store> {
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  store_id: number;
+  @Column({ primaryKey: true, autoIncrement: true })
+  id: number;
 
-  @Column({
-    type: DataType.STRING(255),
-    allowNull: false,
-  })
-  store_city: string;
+  @Column
+  name: string;
 
-  @Column({
-   type: DataType.STRING(255),
-   allowNull: false,
-  })
-  store_address: string;
+  @Column
+  address1: string;
+
+  @Column
+  address2: string;
+
+  @Column
+  city: string;
+
+  @Column
+  state: string;
+
+  @Column
+  country: string;
+
+  @Column
+  postcode: string;
+
+  @Column
+  phone: string;
 }

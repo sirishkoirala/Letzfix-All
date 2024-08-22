@@ -4,12 +4,12 @@ import { IconChevronRight } from "@tabler/icons-react";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Tsmartphones } from "../types/Tsmartphones";
-import { usePhones } from "../hooks/usePhones";
+import { useDeviceBrand } from "../hooks/useDeviceBrand";
 import { useRouter } from "next/navigation";
 
 const AnySmartphonesNewOrOld = () => {
    const router = useRouter(); 
-   const { Smartphones, isLoading, isError } = usePhones();
+   const { Brands, isLoading, isError } = useDeviceBrand();
 
    if (isLoading)
       return (
@@ -36,7 +36,7 @@ const AnySmartphonesNewOrOld = () => {
                </p>
 
                <div className="grid grid-cols-4 gap-8 mt-4">
-                  {Smartphones.map((smartphone: Tsmartphones) => {
+                  {Brands.map((smartphone: Tsmartphones) => {
                      return (
                         <div
                            key={smartphone.id}

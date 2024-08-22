@@ -1,21 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './core/database/database.module';
-import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { SmartPhonesModule } from './modules/smartphone/smartphones.module';
 import { DevicesModule } from './modules/devices/devices.module';
-import { PhoneModelModule } from './modules/phone-models/phone-models.module';
-import { PhonesModule } from './modules/phones/phones.module';
-import { CustomerModule } from './modules/customer/customer.module';
+import { CustomersModule } from './modules/customers/customers.module';
+import { DeviceModelsModule } from './modules/device-models/device-models.module';
 import { FaultsModule } from './modules/faults/faults.module';
+import { AppointmentsModule } from './modules/appointments/appointments.module';
+import { DeviceBrandsModule } from './modules/device-brands/device-brands.module';
 import { StoresModule } from './modules/stores/stores.module';
-import { AppointmentModule } from './modules/appointment/appointment.module';
 
 @Module({
-  // imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule,SmartPhoneModule],
   imports: [
     SequelizeModule.forRoot({
       dialect: 'postgres',
@@ -27,15 +23,14 @@ import { AppointmentModule } from './modules/appointment/appointment.module';
       autoLoadModels: true,
       synchronize: true,
     }),
-    DevicesModule,
-    SmartPhonesModule,
-    UsersModule,
-    PhoneModelModule,
-    PhonesModule,
-    CustomerModule,
-    FaultsModule,
+    // UsersModule,
     StoresModule,
-    AppointmentModule
+    CustomersModule,
+    DevicesModule,
+    DeviceBrandsModule,
+    DeviceModelsModule,
+    FaultsModule,
+    AppointmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

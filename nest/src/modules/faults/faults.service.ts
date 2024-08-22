@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateFaultDto } from './dto/create-fault.dto';
 import { UpdateFaultDto } from './dto/update-fault.dto';
+import { Fault } from './entities/fault.entity';
 
 @Injectable()
 export class FaultsService {
-  create(createFaultDto: CreateFaultDto) {
-    return 'This action adds a new fault';
+  constructor(
+    @InjectModel(Fault)
+    private readonly faultModel: typeof Fault,
+  ) {}
+
+  async create(createFaultDto: CreateFaultDto): Promise<Fault> {
+    const fault = new Fault();
+    fault.name = createFaultDto.name;
+    fault.deviceId = createFaultDto.deviceId;
+
+    return await fault.save();
   }
 
-  findAll() {
-    return `This action returns all faults`;
+  async findAll(): Promise<Fault[]> {
+    return await this.faultModel.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fault`;
+  async findOne(id: number): Promise<Fault> {
+    return await this.faultModel.findByPk(id);
   }
 
-  update(id: number, updateFaultDto: UpdateFaultDto) {
-    return `This action updates a #${id} fault`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} fault`;
-  }
+  
 }
