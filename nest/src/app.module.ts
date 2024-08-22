@@ -10,6 +10,8 @@ import { DevicesModule } from './modules/devices/devices.module';
 import { PhoneModelModule } from './modules/phone-models/phone-models.module';
 import { PhonesModule } from './modules/phones/phones.module';
 import { CustomerModule } from './modules/customer/customer.module';
+import { FaultsModule } from './modules/faults/faults.module';
+import { StoresModule } from './modules/stores/stores.module';
 
 @Module({
   // imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule,SmartPhoneModule],
@@ -29,7 +31,9 @@ import { CustomerModule } from './modules/customer/customer.module';
     UsersModule,
     PhoneModelModule,
     PhonesModule,
-    CustomerModule
+    CustomerModule,
+    FaultsModule,
+    StoresModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+// import { Fault } from './../faults/entities/fault.entity';
 
 @Table({ tableName: 'devices' })
 export class Devices extends Model<Devices> {
@@ -6,7 +7,7 @@ export class Devices extends Model<Devices> {
     type: DataType.STRING,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: false
+    autoIncrement: false,
   })
   id: string;
 
@@ -27,4 +28,7 @@ export class Devices extends Model<Devices> {
     allowNull: false,
   })
   url: string;
+
+  // @HasMany(() => Fault)
+  // faults: Fault[];
 }

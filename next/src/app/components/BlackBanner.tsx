@@ -9,7 +9,7 @@ const BlackBanner = () => {
                   The leatest from our stores
                </h1>
             </div>
-            <div className="flex pt-2">
+            <div className="flex items-center justify-between pt-2">
                <div className="flex flex-col md:flex-row justify-between p-6 text-white mb-4 md:mb-0 md:w-1/3">
                   <div className="flex flex-col items-center justify-center">
                      <div className=" text-white rounded-lg mb-4">
@@ -37,7 +37,7 @@ const BlackBanner = () => {
                         />
                      </div>
                      <p className="mt-2 text-[26px] font-light leading-[38px] text-center">
-                        Sanitize and optimize your device
+                        Sanitize and optimize devices
                      </p>
                      <button className="mt-4 bg-teal-900 text-white hover:bg-teal-900/80 py-1 px-4 border-2 border-white rounded-full text-[16px] leading-[24px]">
                         Get Started

@@ -34,8 +34,8 @@ const router = useRouter();
          specialDamage,
       };
       localStorage.setItem("damageData", JSON.stringify(damageData));
-
-      router.push("/repairs/customer-details");
+      
+      router.push("/repairs/delivery-selection");
    };
 
    return (

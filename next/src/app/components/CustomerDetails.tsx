@@ -1,15 +1,17 @@
-'use client'
+"use client";
 import { IconArrowNarrowLeft } from "@tabler/icons-react";
 import React, { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
-const CustomerDetails: React.FC = () => {
+const CustomerDetails = () => {
    const [firstName, setFirstName] = useState<string>("");
    const [lastName, setLastName] = useState<string>("");
    const [email, setEmail] = useState<string>("");
    const [phone, setPhone] = useState<string>("");
+   const router = useRouter();
 
    const handleSubmit = (event: FormEvent) => {
-      event.preventDefault(); 
+      event.preventDefault();
       const customerDetails = {
          firstName,
          lastName,
@@ -17,9 +19,8 @@ const CustomerDetails: React.FC = () => {
          phone,
       };
       localStorage.setItem("customerDetails", JSON.stringify(customerDetails));
-
-
-      console.log("LocalStoarage:", customerDetails);
+      // console.log("LocalStoarage:", customerDetails);
+      router.push("/repairs/confirmation");
    };
 
    return (
