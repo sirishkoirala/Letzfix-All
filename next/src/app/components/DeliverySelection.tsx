@@ -6,13 +6,13 @@ import { useStores } from "./../hooks/useStores";
 import Skeleton from "react-loading-skeleton";
 
 interface City {
-   name: string;
-   location: string;
+   store_city: string;
+   store_address: string;
 }
 
 const DeliverySelection = () => {
    const [searchTerm, setSearchTerm] = useState<string>("");
-   const { cities, isLoading, isError } = useStores();
+   const { cities = [], isLoading, isError } = useStores();
    if (isLoading)
       return (
          <div className="containers">
@@ -24,11 +24,9 @@ const DeliverySelection = () => {
 
    const router = useRouter();
 
-   const filteredCities = cities.filter((city: City) => {
-      console.log(city.name, searchTerm);
-      return city.name && city.name.toLowerCase().includes(searchTerm.toLowerCase());
+   const filteredCities = (cities || []).filter((city: City) => {
+      return city.store_city && city.store_city.toLowerCase().includes(searchTerm.toLowerCase());
    });
-   console.log(filteredCities);
 
    const handleCityClick = (city: City) => {
       // console.log(city);
@@ -69,9 +67,9 @@ const DeliverySelection = () => {
                                  <p className="h-4 w-4 bg-teal-700 rounded-full text-white text-[14px]">
                                     &nbsp;{index + 1}
                                  </p>
-                                 <p className="text-[26px] leading-[29px] font-light tracking-tight">{city.name}</p>
+                                 <p className="text-[26px] leading-[29px] font-light tracking-tight">{city.store_city}</p>
                               </div>
-                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{city.location}</p>
+                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{city.store_address}</p>
                               <div className="flex gap-4 mt-2">
                                  <p className="text-[14px] leading-[17px] text-gray-600">Next available</p>
                                  <p className="text-[14px] leading-[17px] text-[#0b8350] font-bold">today, 9:00am</p>

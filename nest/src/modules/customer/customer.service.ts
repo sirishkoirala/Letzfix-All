@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { CustomerDetails } from './entities/customer.entity';
 
 @Injectable()
 export class CustomerService {
-  create(createCustomerDto: CreateCustomerDto) {
-    return 'This action adds a new customer';
+  constructor(
+    @InjectModel(CustomerDetails)
+    private readonly customerDetailsModel: typeof CustomerDetails,
+  ) {}
+
+  async findAll(): Promise<CustomerDetails[]> {
+    return this.customerDetailsModel.findAll();
   }
 
-  findAll() {
-    return `This action returns all customer`;
+  async findOne(id: number): Promise<CustomerDetails> {
+    return this.customerDetailsModel.findByPk(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  async create(customerDetails: CustomerDetails): Promise<CustomerDetails> {
+    return this.customerDetailsModel.create(customerDetails);
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async delete(id: number): Promise<boolean> {
+    const customer = await this.customerDetailsModel.findByPk(id);
+    if (!customer) {
+      return false;
+    }
+    await customer.destroy();
+    return true;
   }
 }

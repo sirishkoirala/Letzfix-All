@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Body,
+  NotFoundException,
+} from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { CustomerDetails } from './entities/customer.entity';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
-
-  @Post()
-  create(@Body() createCustomerDto: CreateCustomerDto) {
-    return this.customerService.create(createCustomerDto);
-  }
+  constructor(
+    private readonly customerDetailsService: CustomerService,
+  ) {}
 
   @Get()
-  findAll() {
-    return this.customerService.findAll();
+  async findAll(): Promise<CustomerDetails[]> {
+    return this.customerDetailsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerService.findOne(+id);
+  async findOne(@Param('id') id: number): Promise<CustomerDetails> {
+    const customer = await this.customerDetailsService.findOne(id);
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+    return customer;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-    return this.customerService.update(+id, updateCustomerDto);
+  @Post()
+  async create(
+    @Body() customerDetails: CustomerDetails,
+  ): Promise<CustomerDetails> {
+    return this.customerDetailsService.create(customerDetails);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerService.remove(+id);
+  async delete(@Param('id') id: number): Promise<void> {
+    const result = await this.customerDetailsService.delete(id);
+    if (!result) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
   }
 }

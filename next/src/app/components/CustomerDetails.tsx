@@ -2,6 +2,8 @@
 import { IconArrowNarrowLeft } from "@tabler/icons-react";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useCustomer } from ".././hooks/useCustomer";
+import Skeleton from "react-loading-skeleton";
 
 const CustomerDetails = () => {
    const [firstName, setFirstName] = useState<string>("");
@@ -10,18 +12,46 @@ const CustomerDetails = () => {
    const [phone, setPhone] = useState<string>("");
    const router = useRouter();
 
-   const handleSubmit = (event: FormEvent) => {
+   // const { customer, isLoading, isError } = useCustomer();
+
+   // if (isLoading)
+   //    return (
+   //       <div className="containers">
+   //          <Skeleton count={8} />
+   //       </div>
+   //    );
+
+   // if (isError) return <div>Failed to load devices</div>;
+
+   const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
+
       const customerDetails = {
-         firstName,
-         lastName,
-         email,
-         phone,
+         customer_fname: firstName,
+         customer_lname: lastName,
+         customer_email: email,
+         customer_phone: phone,
       };
-      localStorage.setItem("customerDetails", JSON.stringify(customerDetails));
-      // console.log("LocalStoarage:", customerDetails);
-      router.push("/repairs/confirmation");
+
+      try {
+         const response = await fetch("http://localhost:3000/api/customer", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(customerDetails),
+         });
+
+         if (response.ok) {
+            router.push("/repairs/confirmation");
+         } else {
+            console.error("Failed ");
+         }
+      } catch (error) {
+         console.error("An error occurred", error);
+      }
    };
+
 
    return (
       <div className="pt-14">
