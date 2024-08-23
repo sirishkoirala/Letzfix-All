@@ -1,4 +1,11 @@
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+
 export class CreateDeviceModelDto {
-  readonly name: string;
-  readonly deviceBrandId: number;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  deviceBrandId: number;
 }

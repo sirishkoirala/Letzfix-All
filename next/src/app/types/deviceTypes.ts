@@ -1,5 +1,5 @@
 export interface DeviceModel {
-   model_id: string;
+   id: string;
    name: string;
    url: string;
 }

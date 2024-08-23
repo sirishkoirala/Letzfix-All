@@ -5,7 +5,7 @@ import { Tsmartphones } from "../types/Tsmartphones";
 import { useDeviceBrand } from "../hooks/useDeviceBrand";
 import Skeleton from "react-loading-skeleton";
 
-type CustomerDetails = {
+type Customer = {
    firstName: string;
    lastName: string;
    email: string;
@@ -13,19 +13,23 @@ type CustomerDetails = {
 };
 
 type SelectedCity = {
-   store_city: string;
-   store_address: string;
+   city: string;
+   address1: string;
 };
 
 type DamageData = {
    selectedIssues: string;
 };
+type Model={
+   id: number,
+   name: string,
+}
 
 type DataState = {
    damageData: DamageData | null;
    selectedDevice: string | null;
-   selectedModel: string | null;
-   customerDetails: CustomerDetails | null;
+   selectedModel: Model | null;
+   customer: Customer | null;
    selectedCity: SelectedCity | null;
    selectedDate: string | null;
    selectedTime: string | null;
@@ -38,7 +42,7 @@ const DeviceSummary = () => {
    useEffect(() => {
       const damageData = localStorage.getItem("damageData");
       const selectedModel = localStorage.getItem("selectedModel");
-      const customerDetails = localStorage.getItem("customerDetails");
+      const customer = localStorage.getItem("customer");
       const selectedDevice = localStorage.getItem("selectedDevice");
       const selectedCity = localStorage.getItem("selectedCity");
       const selectedDate = localStorage.getItem("selectedDate");
@@ -46,8 +50,8 @@ const DeviceSummary = () => {
 
       const allData: DataState = {
          damageData: damageData ? JSON.parse(damageData) : null,
-         selectedModel: selectedModel || null,
-         customerDetails: customerDetails ? JSON.parse(customerDetails) : null,
+         selectedModel: selectedModel ? JSON.parse(selectedModel) : null,
+         customer: customer ? JSON.parse(customer) : null,
          selectedDevice: selectedDevice || null,
          selectedCity: selectedCity ? JSON.parse(selectedCity) : null,
          selectedDate: selectedDate || null,
@@ -69,20 +73,24 @@ const DeviceSummary = () => {
       return <div>Error...</div>;
    }
 
-   const phoneImage: Tsmartphones | undefined = Brands.find(
+   //need to fix
+   // console.log(Brands[1].image)
+   const brandImage: Tsmartphones | undefined = Brands.find(
       (phone: Tsmartphones) => phone.name === data?.selectedDevice
    );
-   const { damageData, selectedModel, customerDetails, selectedCity, selectedDate, selectedTime } = data || {};
+
+   const { damageData, selectedModel, customer, selectedCity, selectedDate, selectedTime } = data || {};
 
    return (
       <div className="mt-10">
          <div className="max-w-md mx-auto p-4">
             <h2 className="text-[20px] leading-[24px] tracking-tight">Summary</h2>
             <div className="flex items-center mt-4">
-               {phoneImage ? <img src={phoneImage.image} alt={phoneImage.name} className="h-12 " /> : <div>Device not found</div>}
+               <img src={brandImage?.image} alt="cant load" className="h-12 w-12" />
+
                <div>
                   <p className="font-medium">{damageData?.selectedIssues || "Device Repair"}</p>
-                  <p className="text-[14px] text-gray-600">{selectedModel || "Phone"}</p>
+                  <p className="text-[14px] text-gray-600">{selectedModel?.name || "Phone"}</p>
                </div>
                <a href="#" onClick={(e) => e.preventDefault()} className="ml-auto font-underline underline-offset-2">
                   Change
@@ -97,8 +105,8 @@ const DeviceSummary = () => {
                      Store location
                   </p>
                   <div className="ml-9">
-                     <p className="text-[15px] text-gray-600">{selectedCity?.store_city || ""}</p>
-                     <p className="text-[15px] text-gray-600">{selectedCity?.store_address || ""}</p>
+                     <p className="text-[15px] text-gray-600">{selectedCity?.city || ""}</p>
+                     <p className="text-[15px] text-gray-600">{selectedCity?.address1 || ""}</p>
                   </div>
                </li>
                <li>
@@ -120,10 +128,10 @@ const DeviceSummary = () => {
                   </p>
                   <div className="ml-9">
                      <p className="text-[15px] text-gray-600">
-                        {customerDetails ? `${customerDetails.firstName} ${customerDetails.lastName}` : ""}
+                        {customer ? `${customer.firstName} ${customer.lastName}` : ""}
                      </p>
-                     <p className="text-[14px] text-gray-600">{customerDetails?.email || ""}</p>
-                     <p className="text-[13px] text-gray-600">{customerDetails?.phone || ""}</p>
+                     <p className="text-[14px] text-gray-600">{customer?.email || ""}</p>
+                     <p className="text-[13px] text-gray-600">{customer?.phone || ""}</p>
                   </div>
                </li>
             </ul>

@@ -2,8 +2,6 @@
 import { IconArrowNarrowLeft } from "@tabler/icons-react";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { useCustomer } from ".././hooks/useCustomer";
-import Skeleton from "react-loading-skeleton";
 
 const CustomerDetails = () => {
    const [firstName, setFirstName] = useState<string>("");
@@ -15,28 +13,56 @@ const CustomerDetails = () => {
    const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
 
-      localStorage.setItem("fname", firstName);
-
-      const customerDetails = {
-         fname: firstName,
-         lname: lastName,
-         email: email,
-         phone: phone,
+      const customer = {
+         firstName,
+         lastName,
+         email,
+         phone,
       };
 
+      localStorage.setItem("customer", JSON.stringify(customer));
+
       try {
-         const response = await fetch("http://localhost:3000/api/customer", {
+         const customerResponse = await fetch("http://localhost:3000/api/customers", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
             },
-            body: JSON.stringify(customerDetails),
+            body: JSON.stringify(customer),
          });
 
-         if (response.ok) {
+         if (!customerResponse.ok) {
+            throw new Error("Failed to submit customer details");
+         }
+
+         const customerData = JSON.parse(localStorage.getItem("customer") || "{}");
+         const selectedTime = localStorage.getItem("selectedTime");
+         const selectedDate = localStorage.getItem("selectedDate");
+        const selectedModel = JSON.parse(localStorage.getItem("selectedModel") || "{}");
+         const selectedCity = JSON.parse(localStorage.getItem("selectedCity") || "{}");
+         const damageData = JSON.parse(localStorage.getItem("damageData") || "{}");
+
+         const appointment = {
+            date: selectedDate,
+            time: selectedTime,
+            customerId: customerData.id,
+            storeId: selectedCity.id,
+            deviceModelId: selectedModel.id,
+            faultId: damageData.selectedIssues[0],
+         };
+
+         const appointmentResponse = await fetch("http://localhost:3000/api/appointments", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(appointment),
+         });
+
+         if (appointmentResponse.ok) {
             router.push("/repairs/confirmation");
          } else {
-            console.error("Failed ");
+            throw new Error("Failed to submit appointment details");
          }
       } catch (error) {
          console.error("An error occurred", error);

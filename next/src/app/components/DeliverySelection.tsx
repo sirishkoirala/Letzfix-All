@@ -7,12 +7,13 @@ import Skeleton from "react-loading-skeleton";
 
 interface Tlocation {
    city: string;
-   address: string;
+   address1: string;
 }
 
 const DeliverySelection = () => {
    const [searchTerm, setSearchTerm] = useState<string>("");
    const { locations = [], isLoading, isError } = useStores();
+   console.log(locations)
    if (isLoading)
       return (
          <div className="containers">
@@ -69,7 +70,7 @@ const DeliverySelection = () => {
                                  </p>
                                  <p className="text-[26px] leading-[29px] font-light tracking-tight">{location.city}</p>
                               </div>
-                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{location.address}</p>
+                              <p className="text-[14px] leading-[17px] text-gray-500 mt-2">{location.address1}</p>
                               <div className="flex gap-4 mt-2">
                                  <p className="text-[14px] leading-[17px] text-gray-600">Next available</p>
                                  <p className="text-[14px] leading-[17px] text-[#0b8350] font-bold">today, 9:00am</p>

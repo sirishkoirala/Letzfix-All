@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const DeviceSelection = () => {
    const { Brands, isLoading, isError } = useDeviceBrand();
-   
+
    const [models, setModels] = useState<DeviceModel[]>([]);
    const router = useRouter();
 
@@ -33,12 +33,17 @@ const DeviceSelection = () => {
 
    const onSubmit = (data: any) => {
       const selectedPhone = Brands.find((phone: Device) => parseInt(phone.id) === parseInt(data.device));
-      const selectedModel = models.find((model: DeviceModel) => parseInt(model.model_id) === parseInt(data.model));
+      const selectedModel = models.find((model: DeviceModel) => parseInt(model.id) === parseInt(data.model));
 
       //localStorage
       if (selectedPhone && selectedModel) {
+         const selectedModelDetails = {
+            id: selectedModel.id,
+            name: selectedModel.name,
+         };
+
          localStorage.setItem("selectedDevice", selectedPhone.name);
-         localStorage.setItem("selectedModel", selectedModel.name);
+         localStorage.setItem("selectedModel", JSON.stringify(selectedModelDetails));
       }
 
       router.push("/repairs/damage-type");
@@ -103,7 +108,7 @@ const DeviceSelection = () => {
                                  Select a model
                               </option>
                               {models.map((model: DeviceModel) => (
-                                 <option key={model.model_id} value={model.model_id}>
+                                 <option key={model.id} value={model.id}>
                                     {model.name}
                                  </option>
                               ))}

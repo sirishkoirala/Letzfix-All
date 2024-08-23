@@ -11,7 +11,7 @@ export class Customer extends Model<Customer> {
   @Column
   lastName: string;
 
-  @Column({ unique: true })
+  @Column
   email: string;
 
   @Column
