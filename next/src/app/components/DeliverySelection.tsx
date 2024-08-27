@@ -13,7 +13,6 @@ interface Tlocation {
 const DeliverySelection = () => {
    const [searchTerm, setSearchTerm] = useState<string>("");
    const { locations = [], isLoading, isError } = useStores();
-   console.log(locations)
    if (isLoading)
       return (
          <div className="containers">

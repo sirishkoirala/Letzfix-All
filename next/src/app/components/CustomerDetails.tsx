@@ -20,9 +20,11 @@ const CustomerDetails = () => {
          phone,
       };
 
-      localStorage.setItem("customer", JSON.stringify(customer));
-
       try {
+         // Save customer data to localStorage
+         localStorage.setItem("customer", JSON.stringify(customer));
+
+         // Post customer data to the server
          const customerResponse = await fetch("http://localhost:3000/api/customers", {
             method: "POST",
             headers: {
@@ -35,20 +37,26 @@ const CustomerDetails = () => {
             throw new Error("Failed to submit customer details");
          }
 
-         const customerData = JSON.parse(localStorage.getItem("customer") || "{}");
+         const customerData = await customerResponse.json();
+         // customer.id = customerData.id; 
+
+         localStorage.setItem("customer", JSON.stringify(customer));
+
+         // Retrieve other data from localStorage
          const selectedTime = localStorage.getItem("selectedTime");
          const selectedDate = localStorage.getItem("selectedDate");
-        const selectedModel = JSON.parse(localStorage.getItem("selectedModel") || "{}");
+         const selectedModel = JSON.parse(localStorage.getItem("selectedModel") || "{}");
          const selectedCity = JSON.parse(localStorage.getItem("selectedCity") || "{}");
          const damageData = JSON.parse(localStorage.getItem("damageData") || "{}");
 
+        // Create the appointment object
          const appointment = {
             date: selectedDate,
             time: selectedTime,
             customerId: customerData.id,
             storeId: selectedCity.id,
             deviceModelId: selectedModel.id,
-            faultId: damageData.selectedIssues[0],
+            faultId: damageData.selectedFaults[0].id,
          };
 
          const appointmentResponse = await fetch("http://localhost:3000/api/appointments", {
@@ -59,13 +67,14 @@ const CustomerDetails = () => {
             body: JSON.stringify(appointment),
          });
 
-         if (appointmentResponse.ok) {
-            router.push("/repairs/confirmation");
-         } else {
+         if (!appointmentResponse.ok) {
             throw new Error("Failed to submit appointment details");
          }
+
+         router.push("/repairs/confirmation");
       } catch (error) {
-         console.error("An error occurred", error);
+         console.error("An error occurred:", error);
+         alert("An error occurred while processing your request. Please try again.");
       }
    };
 
@@ -87,6 +96,7 @@ const CustomerDetails = () => {
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               className="appearance-none w-full bg-background border-[2px] text-black py-5 px-4 pr-8 rounded-lg leading-tight hover:bg-white hover:border-gray-500"
+                              required
                            />
                            <input
                               type="text"
@@ -94,6 +104,7 @@ const CustomerDetails = () => {
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               className="appearance-none w-full bg-background border-[2px] text-black py-5 px-4 pr-8 rounded-lg leading-tight hover:bg-white hover:border-gray-500"
+                              required
                            />
                         </div>
                         <input
@@ -102,6 +113,7 @@ const CustomerDetails = () => {
                            value={email}
                            onChange={(e) => setEmail(e.target.value)}
                            className="appearance-none w-full bg-background border-[2px] text-black py-5 px-4 pr-8 rounded-lg leading-tight hover:bg-white hover:border-gray-500"
+                           required
                         />
                         <input
                            type="tel"
@@ -109,6 +121,7 @@ const CustomerDetails = () => {
                            value={phone}
                            onChange={(e) => setPhone(e.target.value)}
                            className="appearance-none w-full bg-background border-[2px] text-black py-5 px-4 pr-8 rounded-lg leading-tight hover:bg-white hover:border-gray-500"
+                           required
                         />
                      </div>
                   </div>
@@ -133,7 +146,7 @@ const CustomerDetails = () => {
                <div className="flex items-center justify-between mt-8">
                   <div className="flex items-center">
                      <IconArrowNarrowLeft />
-                     <span className="text-[15.5px] underline underline-offset-2">Back</span>
+                     <span className="text-[15.5px] underline underline-offset-2 cursor-pointer">Back</span>
                   </div>
                   <div className="pr-6">
                      <button type="submit" className="px-4 py-3 bg-gray-200 rounded-full">

@@ -17,13 +17,23 @@ type SelectedCity = {
    address1: string;
 };
 
-type DamageData = {
-   selectedIssues: string;
+type SelectedFault = {
+   id: number;
+   name: string;
+   deviceId: number;
+   createdAt: string;
+   updatedAt: string;
 };
-type Model={
-   id: number,
-   name: string,
-}
+
+type DamageData = {
+   selectedFaults: SelectedFault[];
+   specialDamage: string;
+};
+
+type Model = {
+   id: number;
+   name: string;
+};
 
 type DataState = {
    damageData: DamageData | null;
@@ -73,8 +83,6 @@ const DeviceSummary = () => {
       return <div>Error...</div>;
    }
 
-   //need to fix
-   // console.log(Brands[1].image)
    const brandImage: Tsmartphones | undefined = Brands.find(
       (phone: Tsmartphones) => phone.name === data?.selectedDevice
    );
@@ -89,7 +97,11 @@ const DeviceSummary = () => {
                <img src={brandImage?.image} alt="cant load" className="h-12 w-12" />
 
                <div>
-                  <p className="font-medium">{damageData?.selectedIssues || "Device Repair"}</p>
+                  {damageData?.selectedFaults.map((fault) => (
+                     <p key={fault.id} className="font-medium">
+                        {fault.name}
+                     </p>
+                  ))}
                   <p className="text-[14px] text-gray-600">{selectedModel?.name || "Phone"}</p>
                </div>
                <a href="#" onClick={(e) => e.preventDefault()} className="ml-auto font-underline underline-offset-2">

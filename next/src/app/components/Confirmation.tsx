@@ -1,5 +1,6 @@
 "use client";
 import { IconCircleCheck } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface Name {
@@ -18,6 +19,11 @@ const Confirmation = () => {
          });
       }
    }, []);
+    const router = useRouter();
+
+    const handleClick = () => {
+       router.push("/repairs/appointment-summary");
+    };
 
    return (
       <div className="pt-14">
@@ -30,6 +36,9 @@ const Confirmation = () => {
             <div className="mt-6 mr-14">
                <div className="relative inline-block w-full"></div>
             </div>
+         </div>
+         <div className="">
+            <button onClick={handleClick} className="px-4 py-2 border bg-teal-700 rounded-full text-white">Goto Summary</button>
          </div>
       </div>
    );

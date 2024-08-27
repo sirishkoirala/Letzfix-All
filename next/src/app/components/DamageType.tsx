@@ -1,42 +1,43 @@
-
-'use client'
+"use client";
 import { IconArrowNarrowLeft } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
-const Issues = [
-   "Battery Drain",
-   "Overheating",
-   "Lagging or Freezing",
-   "Camera Malfunction",
-   "Wi-Fi Connectivity Issues",
-   "Touchscreen Unresponsiveness",
-   "App Crashes",
-   "Storage Full",
-   "Speaker or Microphone Problems",
-   "Software Update Failures",
-];
+import { useFaults } from "../hooks/useFaults";
+import Skeleton from "react-loading-skeleton";
+import { Tfaults } from "../types/Tfaults";
 
 const DamageType = () => {
-   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
+   const [selectedFaults, setSelectedFaults] = useState<Tfaults[]>([]);
    const [specialDamage, setSpecialDamage] = useState<string>("");
-const router = useRouter();
+   const { Faults = [], isLoading, error } = useFaults();
 
-    const handleCheckboxChange = (issue: string) => {
-       setSelectedIssues((prev: string[]) =>
-          prev.includes(issue) ? prev.filter((i) => i !== issue) : [...prev, issue]
-       );
-    };
+   const router = useRouter();
+
+   const handleCheckboxChange = (fault: Tfaults) => {
+      setSelectedFaults((prev: Tfaults[]) =>
+         prev.find((f) => f.id === fault.id) ? prev.filter((f) => f.id !== fault.id) : [...prev, fault]
+      );
+   };
 
    const handleContinue = () => {
       const damageData = {
-         selectedIssues,
+         selectedFaults,
          specialDamage,
       };
       localStorage.setItem("damageData", JSON.stringify(damageData));
-      
+
       router.push("/repairs/delivery-selection");
    };
+
+   if (isLoading) {
+      return (
+         <div className="containers">
+            <Skeleton count={8} />
+         </div>
+      );
+   }
+
+   if (error) return <div>Failed to load faults</div>;
 
    return (
       <div className="pt-14">
@@ -47,18 +48,18 @@ const router = useRouter();
             </p>
             <div className="mt-6 mr-14">
                <div className="relative inline-block w-full">
-                  {Issues.map((issue, index) => (
+                  {Faults.map((fault: Tfaults, index: number) => (
                      <div
                         className="flex items-center appearance-none w-full bg-background border-[2px] text-black py-5 px-4 pr-8 rounded-lg leading-tight hover:bg-white hover:border-gray-500 mt-3"
-                        key={index}
+                        key={fault.id}
                      >
                         <input
                            type="checkbox"
-                           id={`issue-${index}`}
+                           id={`fault-${index}`}
                            className="mr-2 w-4 h-4"
-                           onChange={() => handleCheckboxChange(issue)}
+                           onChange={() => handleCheckboxChange(fault)}
                         />
-                        <label htmlFor={`issue-${index}`}>{issue}</label>
+                        <label htmlFor={`fault-${index}`}>{fault.name}</label>
                      </div>
                   ))}
 

@@ -1,4 +1,6 @@
-import { API_HOST, fetcher } from "../constants"
+import { API_HOST } from "../constants"
+import { fetcher} from "../utils"
+import useSWR from "swr";
 
 export function useFaults() {
    const url = `${API_HOST}/faults`;
