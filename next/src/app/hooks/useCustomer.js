@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 
 export function useCustomer() {
-   const url = `${API_HOST}/customer`;
+   const url = `${API_HOST}/customers`;
    const { data, isLoading, error } = useSWR(url, fetcher)
 
    return {
