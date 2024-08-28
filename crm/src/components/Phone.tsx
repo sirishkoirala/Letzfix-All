@@ -1,6 +1,5 @@
-import { Breadcrumb, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
 import { useDeviceModel } from "../hooks/useDeviceModel";
-import { useEffect } from "react";
 
 const columns = [
    {
@@ -35,9 +34,7 @@ const Phone = () => {
 
    if (isError) return <div>Failed to load customer</div>;
 
-   useEffect(() => {
-      document.title = "Devices | Phones";
-   }, []);
+  
    return (
       <div>
          <Breadcrumb>
@@ -45,6 +42,7 @@ const Phone = () => {
             <Breadcrumb.Item>Devices</Breadcrumb.Item>
             <Breadcrumb.Item>Phones</Breadcrumb.Item>
          </Breadcrumb>
+         <Descriptions title="Phone Details" layout="vertical" bordered></Descriptions>
          <Table columns={columns} dataSource={Models} />
       </div>
    );

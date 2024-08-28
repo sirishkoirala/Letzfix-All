@@ -1,6 +1,5 @@
-import { Breadcrumb, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Table } from "antd";
 import useCustomer from "../hooks/useCustomer";
-import { useEffect } from "react";
 
 const columns = [
    {
@@ -42,16 +41,15 @@ const Customer = () => {
    // }
 
    if (isError) return <div>Failed to load customer</div>;
-   // useEffect(() => {
-   //    document.title = "Customers";
-   // }, []);
+   
    return (
       <div>
          <Breadcrumb>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Customers</Breadcrumb.Item>
          </Breadcrumb>
-         <h2 className="text-2xl mb-3 font-medium">Customers</h2>
+         <Descriptions title="Customer Details" layout="vertical" bordered>
+         </Descriptions>
          <Table dataSource={customers} columns={columns} loading={isLoading} />;
       </div>
    );

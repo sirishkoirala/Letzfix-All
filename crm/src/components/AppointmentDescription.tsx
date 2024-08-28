@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Skeleton, Alert, Descriptions, Badge, Breadcrumb } from "antd";
 import useAppointment from "../hooks/useAppointment";
-import { useEffect } from "react";
 
 const AppointmentDescription = () => {
    const { id } = useParams<{ id: string }>();

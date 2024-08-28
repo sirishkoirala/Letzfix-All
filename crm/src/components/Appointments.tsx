@@ -1,8 +1,7 @@
-import { Breadcrumb, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAppointment from "../hooks/useAppointment";
 import { Appointment } from "../Types/Appointment";
-import { useEffect } from "react";
 
 const columns = [
    {
@@ -55,9 +54,7 @@ const Appointments = () => {
    }
 
    if (isError) return <div>Failed to load customer</div>;
-   // useEffect(() => {
-   //    document.title = "Appointments";
-   // }, []);
+   
 
    return (
       <>
@@ -65,6 +62,7 @@ const Appointments = () => {
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Appointment</Breadcrumb.Item>
          </Breadcrumb>
+         <Descriptions title="Appointment Details" layout="vertical" bordered></Descriptions>
          <Table<Appointment>
             columns={columns}
             dataSource={appointments}

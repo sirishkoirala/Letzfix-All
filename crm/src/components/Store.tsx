@@ -1,6 +1,5 @@
-import { Breadcrumb, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
 import { useStores } from "../hooks/useStores";
-import { useEffect } from "react";
 
 const columns = [
    {
@@ -63,17 +62,16 @@ const Store = () => {
 
    if (isError) return <div>Failed to load customer</div>;
 
-   useEffect(() => {
-      document.title = "Stores";
-   }, []);
+   
    return (
-      <div>
+      <>
          <Breadcrumb>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Stores</Breadcrumb.Item>
          </Breadcrumb>
+         <Descriptions title="Store Details" layout="vertical" bordered></Descriptions>
          <Table dataSource={stores} columns={columns} />;
-      </div>
+      </>
    );
 };
 
