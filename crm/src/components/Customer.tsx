@@ -32,14 +32,6 @@ const columns = [
 const Customer = () => {
    const { customers, isLoading, isError } = useCustomer();
 
-   // if (isLoading) {
-   //    return (
-   //       <div className="containers">
-   //          <Skeleton active />
-   //       </div>
-   //    );
-   // }
-
    if (isError) return <div>Failed to load customer</div>;
    
    return (

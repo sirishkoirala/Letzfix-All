@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -70,5 +70,17 @@ export class AppointmentsService {
     if (appointment) {
       await appointment.destroy();
     }
+  }
+  async updateIsArchived(
+    id: number,
+    isArchived: boolean,
+  ): Promise<Appointment> {
+    const appointment = await this.appointmentModel.findByPk(id);
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+    appointment.isArchived = isArchived;
+    await appointment.save();
+    return appointment;
   }
 }

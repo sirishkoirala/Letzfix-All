@@ -1,4 +1,4 @@
-import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Table } from "antd";
 import { useStores } from "../hooks/useStores";
 
 const columns = [
@@ -52,13 +52,7 @@ const columns = [
 
 const Store = () => {
    const { stores, isLoading, isError } = useStores();
-   if (isLoading) {
-      return (
-         <div className="containers">
-            <Skeleton active />
-         </div>
-      );
-   }
+   
 
    if (isError) return <div>Failed to load customer</div>;
 
@@ -70,7 +64,7 @@ const Store = () => {
             <Breadcrumb.Item>Stores</Breadcrumb.Item>
          </Breadcrumb>
          <Descriptions title="Store Details" layout="vertical" bordered></Descriptions>
-         <Table dataSource={stores} columns={columns} />;
+         <Table dataSource={stores} columns={columns} loading={isLoading}/>;
       </>
    );
 };

@@ -1,4 +1,4 @@
-import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Table } from "antd";
 import { useFaults } from "../hooks/useFaults";
 
 const columns = [
@@ -16,13 +16,7 @@ const columns = [
 
 const FaultPhone = () => {
    const { Faults, isLoading, error } = useFaults();
-   if (isLoading) {
-      return (
-         <div className="containers">
-            <Skeleton active />
-         </div>
-      );
-   }
+   
 
    if (error) return <div>Failed to load customer</div>;
   
@@ -35,7 +29,7 @@ const FaultPhone = () => {
             <Breadcrumb.Item>Phones</Breadcrumb.Item>
          </Breadcrumb>
          <Descriptions title="Phone Faults" layout="vertical" bordered></Descriptions>
-         <Table columns={columns} dataSource={Faults} />
+         <Table columns={columns} dataSource={Faults} loading={isLoading} />
       </>
    );
 };

@@ -22,4 +22,5 @@ export interface Appointment {
    fault: {
       name: string;
    };
+   isArchived: boolean;
 }

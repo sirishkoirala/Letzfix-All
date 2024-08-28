@@ -28,6 +28,12 @@ export class Appointment extends Model<Appointment> {
   })
   time: string;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  isArchived: boolean;
+
   @ForeignKey(() => Customer)
   @Column
   customerId: number;

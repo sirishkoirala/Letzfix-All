@@ -1,4 +1,4 @@
-import { Breadcrumb, Descriptions, Skeleton, Table } from "antd";
+import { Breadcrumb, Descriptions, Table } from "antd";
 import { useDeviceModel } from "../hooks/useDeviceModel";
 
 const columns = [
@@ -24,14 +24,7 @@ const columns = [
 
 const Phone = () => {
    const { Models, isLoading, isError } = useDeviceModel();
-   if (isLoading) {
-      return (
-         <div className="containers">
-            <Skeleton active />
-         </div>
-      );
-   }
-
+  
    if (isError) return <div>Failed to load customer</div>;
 
   
@@ -43,7 +36,7 @@ const Phone = () => {
             <Breadcrumb.Item>Phones</Breadcrumb.Item>
          </Breadcrumb>
          <Descriptions title="Phone Details" layout="vertical" bordered></Descriptions>
-         <Table columns={columns} dataSource={Models} />
+         <Table columns={columns} dataSource={Models} loading={isLoading}/>
       </div>
    );
 };
