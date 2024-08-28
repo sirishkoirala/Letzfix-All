@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { DeviceModel } from './entities/device-model.entity';
 import { CreateDeviceModelDto } from './dto/create-device-model.dto';
+import { DeviceBrand } from '../device-brands/entities/device-brand.entity';
 
 @Injectable()
 export class DeviceModelsService {
@@ -10,7 +11,9 @@ export class DeviceModelsService {
     private readonly deviceModel: typeof DeviceModel,
   ) {}
 
-  async create(createDeviceModelDto: CreateDeviceModelDto): Promise<DeviceModel> {
+  async create(
+    createDeviceModelDto: CreateDeviceModelDto,
+  ): Promise<DeviceModel> {
     return await this.deviceModel.create({
       name: createDeviceModelDto.name,
       deviceBrandId: createDeviceModelDto.deviceBrandId,
@@ -18,7 +21,9 @@ export class DeviceModelsService {
   }
 
   async findAll(): Promise<DeviceModel[]> {
-    return await this.deviceModel.findAll();
+    return await this.deviceModel.findAll({
+      include: [{ model: DeviceBrand }],
+    });
   }
 
   async findOne(id: number): Promise<DeviceModel> {

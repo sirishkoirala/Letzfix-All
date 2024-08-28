@@ -1,4 +1,10 @@
-import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { DeviceBrand } from 'src/modules/device-brands/entities/device-brand.entity';
 
 @Table({ tableName: 'device_models' })
@@ -12,4 +18,7 @@ export class DeviceModel extends Model<DeviceModel> {
   @ForeignKey(() => DeviceBrand)
   @Column
   deviceBrandId: number;
+
+  @BelongsTo(() => DeviceBrand)
+  deviceBrand: DeviceBrand;
 }

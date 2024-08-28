@@ -3,6 +3,11 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
+import { Customer } from '../customers/entities/customer.entity';
+import { Device } from '../devices/entities/device.entity';
+import { Store } from '../stores/entities/store.entity';
+import { DeviceModel } from '../device-models/entities/device-model.entity';
+import { Fault } from '../faults/entities/fault.entity';
 
 @Injectable()
 export class AppointmentsService {
@@ -26,7 +31,14 @@ export class AppointmentsService {
   }
 
   async findAll(): Promise<Appointment[]> {
-    return await this.appointmentModel.findAll();
+    return await this.appointmentModel.findAll({
+      include: [
+        { model: Customer },
+        { model: Store },
+        { model: DeviceModel },
+        { model: Fault },
+      ],
+    });
   }
 
   async findOne(id: number): Promise<Appointment> {
