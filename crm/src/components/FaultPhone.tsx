@@ -1,25 +1,110 @@
-import { Breadcrumb, Descriptions, Table } from "antd";
+import { useState } from "react";
+import axios from "axios";
+import {
+   Breadcrumb,
+   Descriptions,
+   Table,
+   Modal,
+   Form,
+   Input,
+   Button,
+   Space,
+   Popconfirm,
+   PopconfirmProps,
+   message,
+} from "antd";
 import { useFaults } from "../hooks/useFaults";
-
-const columns = [
-   {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-   },
-   {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-   },
-];
+import { Fault } from "../Types/Fault";
 
 const FaultPhone = () => {
+   const [form] = Form.useForm();
    const { Faults, isLoading, error } = useFaults();
-   
+   const [selectedFault, setSelectedFault] = useState<Fault | null>(null);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
-   if (error) return <div>Failed to load customer</div>;
-  
+   const columns = [
+      {
+         title: "Id",
+         dataIndex: "id",
+         key: "id",
+      },
+      {
+         title: "Name",
+         dataIndex: "name",
+         key: "name",
+      },
+      {
+         title: "Actions",
+         key: "actions",
+         render: (_: any, record: any) => (
+            <Space>
+               <Button type="primary" ghost onClick={() => handleEdit(record)}>
+                  Edit
+               </Button>
+               <Popconfirm
+                  placement="bottomLeft"
+                  title="Delete the fault"
+                  description="Are you sure to delete this fault?"
+                  onConfirm={() => handleDelete(record)}
+                  onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+               >
+                  <Button danger>Delete</Button>
+               </Popconfirm>
+            </Space>
+         ),
+      },
+   ];
+
+   const cancel: PopconfirmProps["onCancel"] = () => {
+      message.error("Click on No");
+   };
+
+   const handleEdit = (record: any) => {
+      setSelectedFault(record);
+      setIsModalOpen(true);
+      form.setFieldsValue(record);
+   };
+
+   const handleDelete = async (record: any) => {
+      try {
+         await axios.delete(`http://localhost:3000/api/faults/${record.id}`);
+         message.success("Fault deleted successfully");
+      } catch (error) {
+         message.error("Failed to delete fault");
+      }
+   };
+
+   const handleAddFault = () => {
+      setSelectedFault(null);
+      form.resetFields();
+      setIsModalOpen(true);
+   };
+
+   const handleModalClose = () => {
+      setIsModalOpen(false);
+      setSelectedFault(null);
+   };
+
+   const onFinish = async (values: any) => {
+      try {
+         if (selectedFault) {
+            // Update fault
+            await axios.patch(`http://localhost:3000/api/faults/${selectedFault.id}`, values);
+            message.success("Fault updated successfully");
+         } else {
+            // Add fault
+            await axios.post("http://localhost:3000/api/faults", values);
+            message.success("Fault added successfully");
+         }
+      } catch (error) {
+         message.error("Failed to save fault");
+      }
+      handleModalClose();
+   };
+
+   if (error) return <div>Failed to load faults</div>;
 
    return (
       <>
@@ -28,8 +113,30 @@ const FaultPhone = () => {
             <Breadcrumb.Item>Faults</Breadcrumb.Item>
             <Breadcrumb.Item>Phones</Breadcrumb.Item>
          </Breadcrumb>
-         <Descriptions title="Phone Faults" layout="vertical" bordered></Descriptions>
-         <Table columns={columns} dataSource={Faults} loading={isLoading} />
+         <div className="flex justify-between items-center mb-3">
+            <Descriptions title="Phone Faults" layout="vertical" bordered></Descriptions>
+            <Button type="primary" onClick={handleAddFault}>
+               Add Fault
+            </Button>
+         </div>
+         <Table columns={columns} dataSource={Faults} loading={isLoading} rowKey="id" />
+         <Modal
+            title={selectedFault ? `Edit Fault Id: ${selectedFault.id}` : "Add Fault"}
+            open={isModalOpen}
+            onOk={form.submit}
+            onCancel={handleModalClose}
+            centered
+         >
+            <Form name="fault_details" onFinish={onFinish} form={form} layout="vertical">
+               <Form.Item
+                  label="Fault Name"
+                  name="name"
+                  rules={[{ required: true, message: "Please input the fault name!" }]}
+               >
+                  <Input placeholder="Fault Name" />
+               </Form.Item>
+            </Form>
+         </Modal>
       </>
    );
 };

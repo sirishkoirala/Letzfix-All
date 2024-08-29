@@ -4,12 +4,12 @@ import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { IconMapPin } from "@tabler/icons-react";
 import { Routes, Route, Link } from "react-router-dom";
-import Customer from "./Customer";
-import Store from "./Store";
+import Customer from "./Customers";
+import Stores from "./Stores";
 import FaultPhone from "./FaultPhone";
-import Phone from "./Phone";
-import Appointment from "./Appointments";
+import Phone from "./Phones";
 import AppointmentDescription from "./AppointmentDescription";
+import Appointments from "./Appointments";
 
 const { Header, Content, Sider } = Layout;
 
@@ -72,13 +72,13 @@ const Dashboard = () => {
                   >
                      <Routes>
                         <Route path="/customers" element={<Customer />} />
-                        <Route path="/stores" element={<Store />} />
+                        <Route path="/stores" element={<Stores />} />
                         <Route path="/faults/phones" element={<FaultPhone />} />
                         <Route path="/faults/laptops" element={<div>Laptop Fault</div>} />
                         <Route path="/devices/phones" element={<Phone />} />
                         <Route path="/devices/laptops" element={<div>Laptop Device</div>} />
                         <Route path="/devices/tablets" element={<div>Tablet Device</div>} />
-                        <Route path="/appointments" element={<Appointment />} />
+                        <Route path="/appointments" element={<Appointments />} />
                         <Route path="/appointments/:id" element={<AppointmentDescription />} />
                      </Routes>
                   </div>
