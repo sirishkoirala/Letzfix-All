@@ -72,11 +72,22 @@ export class AppointmentsService {
       updateAppointmentDto.deviceModelId || appointment.deviceModelId;
     appointment.faultId = updateAppointmentDto.faultId || appointment.faultId;
 
-    const updatedAppointment = await appointment.save();
-
-    console.log('Updated Appointment:', updatedAppointment);
-
-    return updatedAppointment;
+    console.log('Data before saving:', {
+      date: appointment.date,
+      time: appointment.time,
+      customerId: appointment.customerId,
+      storeId: appointment.storeId,
+      deviceModelId: appointment.deviceModelId,
+      faultId: appointment.faultId,
+    });
+    try {
+      const updatedAppointment = await appointment.save();
+      console.log('Updated Appointment:', updatedAppointment);
+      return updatedAppointment;
+    } catch (error) {
+      console.error('Error while saving appointment:', error);
+      throw new Error('Failed to update appointment');
+    }
   }
 
   async remove(id: number): Promise<void> {

@@ -16,22 +16,13 @@ export class Appointment extends Model<Appointment> {
   @Column({ primaryKey: true, autoIncrement: true })
   id: number;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
+  @Column({ type: DataType.STRING, allowNull: false })
   date: string;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
+  @Column({ type: DataType.STRING, allowNull: false })
   time: string;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isArchived: boolean;
 
   @ForeignKey(() => Customer)

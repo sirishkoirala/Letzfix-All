@@ -10,6 +10,8 @@ import { FaultsModule } from './modules/faults/faults.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { DeviceBrandsModule } from './modules/device-brands/device-brands.module';
 import { StoresModule } from './modules/stores/stores.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { InvoiceItemsModule } from './invoice-items/invoice-items.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { StoresModule } from './modules/stores/stores.module';
     DeviceModelsModule,
     FaultsModule,
     AppointmentsModule,
+    InvoicesModule,
+    InvoiceItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

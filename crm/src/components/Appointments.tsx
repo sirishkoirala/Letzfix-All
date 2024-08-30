@@ -1,4 +1,4 @@
-import { Breadcrumb, Descriptions, Table } from "antd";
+import { Breadcrumb, Descriptions, Table, Spin, Alert } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAppointment from "../hooks/useAppointment";
 import { Appointment } from "../Types/Appointment";
@@ -22,7 +22,7 @@ const columns = [
    {
       title: "Customer Name",
       key: "customerId",
-      render: (_: any, data: any) => `${data.customer.firstName} ${data.customer.lastName}`,
+      render: (_: any, data: Appointment) => `${data.customer.firstName} ${data.customer.lastName}`,
    },
    {
       title: "Store Name",
@@ -45,21 +45,29 @@ const Appointments = () => {
    const { appointments, isLoading, isError } = useAppointment();
    const navigate = useNavigate();
 
-  
-   if (isError) return <div>Failed to load customer</div>;
-   
+   if (isError) {
+      return <Alert message="Error" description="Failed to load appointments" type="error" />;
+   }
+
+   if (isLoading) {
+      return <Spin tip="Loading appointments..." />;
+   }
+
+   if (!appointments || appointments.length === 0) {
+      return <Alert message="No Appointments" description="No appointments available at the moment." type="info" />;
+   }
 
    return (
       <>
          <Breadcrumb>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Appointment</Breadcrumb.Item>
+            <Breadcrumb.Item>Appointments</Breadcrumb.Item>
          </Breadcrumb>
-         <Descriptions title="Appointment Details" layout="vertical" bordered></Descriptions>
+         <Descriptions title="Appointment Details" layout="vertical" bordered />
          <Table<Appointment>
             columns={columns}
             dataSource={appointments}
-            loading={isLoading}
+            rowKey="id"
             onRow={(record) => ({
                onClick: () => {
                   navigate(`/appointments/${record.id}`);

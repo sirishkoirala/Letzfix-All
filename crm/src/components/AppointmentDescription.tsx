@@ -19,9 +19,9 @@ import {
 } from "antd";
 import useAppointment from "../hooks/useAppointment";
 import axios from "axios";
-import { Appointment } from "../Types/Appointment";
+import dayjs from "dayjs";
 import { useFaults } from "../hooks/useFaults";
-import { useStores } from "../hooks/useStores"; // Import the useStores hook
+import { useStores } from "../hooks/useStores";
 import { useDeviceModel } from "../hooks/useDeviceModel";
 
 const { Option } = Select;
@@ -35,9 +35,9 @@ const AppointmentDescription = () => {
       revalidate: revalidateAppointment,
    } = useAppointment();
    const { Models = [], isLoading: isLoadingModels, isError: isErrorModels } = useDeviceModel();
-
    const { Faults = [], isLoading: isLoadingFaults, error: errorFaults } = useFaults();
-   const { stores = [], isLoading: isLoadingStores, isError: isErrorStores } = useStores(); // Fetch stores
+   const { stores = [], isLoading: isLoadingStores, isError: isErrorStores } = useStores();
+
    const [form] = Form.useForm();
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isArchived, setIsArchived] = useState<boolean>(false);
@@ -56,6 +56,34 @@ const AppointmentDescription = () => {
          });
       }
    }, [appointment, form]);
+
+   const getDateOptions = () => {
+      return Array.from({ length: 7 }, (_, i) => {
+         const date = dayjs().add(i, "day");
+         return (
+            <Option key={i} value={date.format("ddd, MMM D, YYYY")}>
+               {date.format("ddd, MMM D, YYYY")}
+            </Option>
+         );
+      });
+   };
+
+   const getTimeOptions = () => {
+      return Array.from({ length: 10 }, (_, i) => {
+         const startTime = dayjs()
+            .hour(i + 9)
+            .minute(0);
+         const endTime = dayjs()
+            .hour(i + 10)
+            .minute(0);
+         const timeSlot = `${startTime.format("ha")}-${endTime.format("ha")}`;
+         return (
+            <Option key={i} value={timeSlot}>
+               {timeSlot}
+            </Option>
+         );
+      });
+   };
 
    if (isLoadingAppointment || isLoadingFaults || isLoadingStores || isLoadingModels) {
       return <Skeleton active />;
@@ -106,27 +134,54 @@ const AppointmentDescription = () => {
       setIsModalOpen(false);
    };
 
-   const onFinish = async (values: Appointment) => {
+   const onFinish = async (values: any) => {
       try {
-         const payload = {
+         console.log("Form values:", values);
+
+         const updatedAppointment = {
+            ...values,
+            customer: {
+               id: values.customer.id,
+               firstName: values.customer.firstName,
+               lastName: values.customer.lastName,
+               phone: values.customer.phone,
+               email: values.customer.email,
+            },
+            store: {
+               id: values.store.id,
+               name: stores.find((store) => store.id === values.store.id)?.name,
+            },
+            deviceModel: {
+               id: values.deviceModel.id,
+               name: Models.find((model) => model.id === values.deviceModel.id)?.name,
+            },
+            fault: {
+               id: values.fault.id,
+               name: Faults.find((fault) => fault.id === values.fault.id)?.name,
+            },
             date: values.date,
             time: values.time,
-            isArchived: values.isArchived,
-            customerId: values.customer.id,
-            storeId: values.store.id,
-            deviceModelId: values.deviceModel.id,
-            faultId: values.fault.id,
+            isArchived: isArchived,
          };
 
-         const response = await axios.patch(`http://localhost:3000/api/appointments/${id}`, payload);
-         console.log(response);
+         console.log("Data being sent to the server:", updatedAppointment);
+
+         const response = await axios.patch(`http://localhost:3000/api/appointments/${id}`, updatedAppointment);
+
+         console.log("Server Response:", response.data);
          message.success("Appointment updated successfully.");
          setIsModalOpen(false);
          revalidateAppointment();
       } catch (error) {
+         if (axios.isAxiosError(error)) {
+            console.error("Axios error response:", error.response?.data);
+         } else {
+            console.error("Error updating appointment:", error);
+         }
          message.error("Failed to update the appointment.");
       }
    };
+
 
    return (
       <>
@@ -230,12 +285,12 @@ const AppointmentDescription = () => {
                <Row gutter={16}>
                   <Col span={12}>
                      <Form.Item label="Date" name="date">
-                        <Input />
+                        <Select placeholder="Select a date">{getDateOptions()}</Select>
                      </Form.Item>
                   </Col>
                   <Col span={12}>
                      <Form.Item label="Time" name="time">
-                        <Input />
+                        <Select placeholder="Select a time">{getTimeOptions()}</Select>
                      </Form.Item>
                   </Col>
                </Row>

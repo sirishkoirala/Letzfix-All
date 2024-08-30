@@ -1,7 +1,7 @@
 export interface Appointment {
    id: number;
-   date: string;
-   time: string;
+   date: any;
+   time: any;
    customerId: string;
    storeId: string;
    deviceModelId: string;
