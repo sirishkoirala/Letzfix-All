@@ -28,7 +28,7 @@ import axios from "axios";
 
 const Stores = () => {
    const [form] = Form.useForm();
-   const { stores, isLoading, isError } = useStores();
+   const { stores, isLoading, isError, revalidate } = useStores();
    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -116,6 +116,7 @@ const Stores = () => {
       try {
          await axios.delete(`http://localhost:3000/api/stores/${record.id}`);
          message.success("Store deleted successfully");
+         revalidate(); 
       } catch (error) {
          message.error("Failed to delete store");
          console.error("Error deleting store:", error);
@@ -126,6 +127,7 @@ const Stores = () => {
       setSelectedStore(null);
       form.resetFields();
       setIsModalOpen(true);
+      revalidate();
    };
 
    const handleModalClose = () => {
@@ -144,6 +146,7 @@ const Stores = () => {
             await axios.post("http://localhost:3000/api/stores", values);
             message.success("Store added successfully");
          }
+         revalidate();
       } catch (error) {
          message.error("Failed to save store");
          console.error("Error saving store:", error);

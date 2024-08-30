@@ -18,7 +18,7 @@ import { Fault } from "../Types/Fault";
 
 const FaultPhone = () => {
    const [form] = Form.useForm();
-   const { Faults, isLoading, error } = useFaults();
+   const { Faults, isLoading, error, revalidate } = useFaults();
    const [selectedFault, setSelectedFault] = useState<Fault | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -65,12 +65,14 @@ const FaultPhone = () => {
       setSelectedFault(record);
       setIsModalOpen(true);
       form.setFieldsValue(record);
+      revalidate();
    };
 
    const handleDelete = async (record: any) => {
       try {
          await axios.delete(`http://localhost:3000/api/faults/${record.id}`);
          message.success("Fault deleted successfully");
+         revalidate();
       } catch (error) {
          message.error("Failed to delete fault");
       }
@@ -80,6 +82,7 @@ const FaultPhone = () => {
       setSelectedFault(null);
       form.resetFields();
       setIsModalOpen(true);
+      revalidate();
    };
 
    const handleModalClose = () => {
@@ -98,6 +101,7 @@ const FaultPhone = () => {
             await axios.post("http://localhost:3000/api/faults", values);
             message.success("Fault added successfully");
          }
+         revalidate();
       } catch (error) {
          message.error("Failed to save fault");
       }

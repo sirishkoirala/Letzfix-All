@@ -20,7 +20,7 @@ import { Customer } from "../Types/Customer";
 
 const Customers = () => {
    const [form] = Form.useForm();
-   const { customers, isLoading, isError } = useCustomer();
+   const { customers, isLoading, isError,revalidate } = useCustomer();
    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -82,12 +82,14 @@ const Customers = () => {
       setSelectedCustomer(record);
       setIsModalOpen(true);
       form.setFieldsValue(record);
+      revalidate();
    };
 
    const handleDelete = async (record: any) => {
       try {
          await axios.delete(`http://localhost:3000/api/customers/${record.id}`);
          message.success("Customer deleted successfully");
+         revalidate()
       } catch (error) {
          message.error("Failed to delete customer");
       }
@@ -97,6 +99,8 @@ const Customers = () => {
       setSelectedCustomer(null);
       form.resetFields();
       setIsModalOpen(true);
+      revalidate()
+
    };
 
    const handleModalClose = () => {
@@ -115,6 +119,7 @@ const Customers = () => {
             await axios.post("http://localhost:3000/api/customers", values);
             message.success("Customer added successfully");
          }
+         revalidate();
       } catch (error) {
          message.error("Failed to save customer");
       }

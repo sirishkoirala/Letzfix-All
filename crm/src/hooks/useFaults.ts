@@ -5,10 +5,11 @@ import useSWR from "swr";
 
 export function useFaults() {
    const url = `${API_HOST}/faults`;
-   const { data, error, isLoading } = useSWR<Fault[]>(url, fetcher);
+   const { data, error, isLoading, mutate } = useSWR<Fault[]>(url, fetcher);
    return {
       Faults: data,
       error,
       isLoading,
+      revalidate: mutate,
    };
 }

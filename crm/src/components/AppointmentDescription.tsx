@@ -10,6 +10,7 @@ import {
    Modal,
    Form,
    Input,
+   Select,
    Space,
    Popconfirm,
    Row,
@@ -19,28 +20,55 @@ import {
 import useAppointment from "../hooks/useAppointment";
 import axios from "axios";
 import { Appointment } from "../Types/Appointment";
+import { useFaults } from "../hooks/useFaults";
+import { useStores } from "../hooks/useStores"; // Import the useStores hook
+import { useDeviceModel } from "../hooks/useDeviceModel";
+
+const { Option } = Select;
 
 const AppointmentDescription = () => {
    const { id } = useParams<{ id: string }>();
-   const { appointments = [], isLoading, isError } = useAppointment();
+   const {
+      appointments = [],
+      isLoading: isLoadingAppointment,
+      isError: isErrorAppointment,
+      revalidate: revalidateAppointment,
+   } = useAppointment();
+   const { Models = [], isLoading: isLoadingModels, isError: isErrorModels } = useDeviceModel();
+
+   const { Faults = [], isLoading: isLoadingFaults, error: errorFaults } = useFaults();
+   const { stores = [], isLoading: isLoadingStores, isError: isErrorStores } = useStores(); // Fetch stores
    const [form] = Form.useForm();
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isArchived, setIsArchived] = useState<boolean>(false);
 
    const appointment = appointments.find((app) => app.id === Number(id));
-   const [isArchived, setIsArchived] = useState<boolean>(false);
 
    useEffect(() => {
       if (appointment) {
          setIsArchived(appointment.isArchived);
+         form.setFieldsValue({
+            ...appointment,
+            customer: { ...appointment.customer },
+            store: { ...appointment.store },
+            deviceModel: { ...appointment.deviceModel },
+            fault: { ...appointment.fault },
+         });
       }
-   }, [appointment]);
+   }, [appointment, form]);
 
-   if (isLoading) {
+   if (isLoadingAppointment || isLoadingFaults || isLoadingStores || isLoadingModels) {
       return <Skeleton active />;
    }
 
-   if (isError) {
-      return <Alert message="Error" description="Failed to load appointment details." type="error" />;
+   if (isErrorAppointment || errorFaults || isErrorStores || isErrorModels) {
+      return (
+         <Alert
+            message="Error"
+            description="Failed to load appointment, faults, stores, or device models details."
+            type="error"
+         />
+      );
    }
 
    if (!appointment) {
@@ -54,6 +82,7 @@ const AppointmentDescription = () => {
          });
          setIsArchived(!isArchived);
          message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
+         revalidateAppointment();
       } catch (error) {
          message.error("Failed to update the archive status.");
       }
@@ -61,13 +90,13 @@ const AppointmentDescription = () => {
 
    const handleEdit = () => {
       setIsModalOpen(true);
-      form.setFieldsValue(appointment);
    };
 
    const handleDelete = async () => {
       try {
          await axios.delete(`http://localhost:3000/api/appointments/${id}`);
          message.success("Appointment deleted successfully.");
+         revalidateAppointment();
       } catch (error) {
          message.error("Failed to delete the appointment.");
       }
@@ -79,9 +108,21 @@ const AppointmentDescription = () => {
 
    const onFinish = async (values: Appointment) => {
       try {
-         await axios.put(`http://localhost:3000/api/appointments/${id}`, values);
+         const payload = {
+            date: values.date,
+            time: values.time,
+            isArchived: values.isArchived,
+            customerId: values.customer.id,
+            storeId: values.store.id,
+            deviceModelId: values.deviceModel.id,
+            faultId: values.fault.id,
+         };
+
+         const response = await axios.patch(`http://localhost:3000/api/appointments/${id}`, payload);
+         console.log(response);
          message.success("Appointment updated successfully.");
          setIsModalOpen(false);
+         revalidateAppointment();
       } catch (error) {
          message.error("Failed to update the appointment.");
       }
@@ -122,7 +163,7 @@ const AppointmentDescription = () => {
             <Descriptions.Item label="Date">{appointment.date}</Descriptions.Item>
             <Descriptions.Item label="Time">{appointment.time}</Descriptions.Item>
             <Descriptions.Item label="Status" span={3}>
-               <Badge status="processing" text="Scheduled" />
+               <Badge status={isArchived ? "default" : "processing"} text={isArchived ? "Archived" : "Scheduled"} />
             </Descriptions.Item>
          </Descriptions>
 
@@ -130,36 +171,58 @@ const AppointmentDescription = () => {
             <Form form={form} onFinish={onFinish} layout="vertical">
                <Row gutter={16}>
                   <Col span={12}>
-                     <Form.Item label="Customer Name" name={["customer", "name"]}>
+                     <Form.Item label="First Name" name={["customer", "firstName"]}>
                         <Input />
                      </Form.Item>
                   </Col>
                   <Col span={12}>
-                     <Form.Item label="Device Model" name={["deviceModel", "name"]}>
+                     <Form.Item label="Last Name" name={["customer", "lastName"]}>
                         <Input />
                      </Form.Item>
                   </Col>
                </Row>
+               <Form.Item name={["customer", "id"]} hidden>
+                  <Input />
+               </Form.Item>
                <Row gutter={16}>
                   <Col span={12}>
-                     <Form.Item label="Fault" name={["fault", "name"]}>
-                        <Input />
+                     <Form.Item label="Device Model" name={["deviceModel", "id"]}>
+                        <Select placeholder="Select a device model">
+                           {Models.map((model) => (
+                              <Option key={model.id} value={model.id}>
+                                 {model.name}
+                              </Option>
+                           ))}
+                        </Select>
                      </Form.Item>
                   </Col>
+                  <Col span={12}>
+                     <Form.Item label="Fault" name={["fault", "id"]}>
+                        <Select placeholder="Select a fault">
+                           {Faults.map((fault) => (
+                              <Option key={fault.id} value={fault.id}>
+                                 {fault.name}
+                              </Option>
+                           ))}
+                        </Select>
+                     </Form.Item>
+                  </Col>
+               </Row>
+
+               <Form.Item name={["deviceModel", "id"]} hidden>
+                  <Input />
+               </Form.Item>
+               <Form.Item name={["fault", "name"]} hidden>
+                  <Input />
+               </Form.Item>
+               <Row gutter={16}>
                   <Col span={12}>
                      <Form.Item label="Phone" name={["customer", "phone"]}>
                         <Input />
                      </Form.Item>
                   </Col>
-               </Row>
-               <Row gutter={16}>
                   <Col span={12}>
                      <Form.Item label="Email" name={["customer", "email"]}>
-                        <Input />
-                     </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                     <Form.Item label="Store Name" name={["store", "name"]}>
                         <Input />
                      </Form.Item>
                   </Col>
@@ -176,6 +239,27 @@ const AppointmentDescription = () => {
                      </Form.Item>
                   </Col>
                </Row>
+               <Row gutter={16}>
+                  <Col span={12}>
+                     <Form.Item label="Store Name" name={["store", "id"]}>
+                        <Select placeholder="Select a store">
+                           {stores.map((store) => (
+                              <Option key={store.id} value={store.id}>
+                                 {store.name}
+                              </Option>
+                           ))}
+                        </Select>
+                     </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                     <Form.Item label="Store Address" name={["store", "address1"]}>
+                        <Input />
+                     </Form.Item>
+                  </Col>
+               </Row>
+               <Form.Item name={["store", "id"]} hidden>
+                  <Input />
+               </Form.Item>
             </Form>
          </Modal>
       </>

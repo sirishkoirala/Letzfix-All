@@ -1,12 +1,11 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { Customer } from '../customers/entities/customer.entity';
-import { Device } from '../devices/entities/device.entity';
-import { Store } from '../stores/entities/store.entity';
 import { DeviceModel } from '../device-models/entities/device-model.entity';
+import { Store } from '../stores/entities/store.entity';
 import { Fault } from '../faults/entities/fault.entity';
 
 @Injectable()
@@ -19,15 +18,9 @@ export class AppointmentsService {
   async create(
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
-    const appointment = new Appointment();
-    appointment.date = createAppointmentDto.date;
-    appointment.time = createAppointmentDto.time;
-    appointment.customerId = createAppointmentDto.customerId;
-    appointment.storeId = createAppointmentDto.storeId;
-    appointment.deviceModelId = createAppointmentDto.deviceModelId;
-    appointment.faultId = createAppointmentDto.faultId;
-
-    return await appointment.save();
+    const appointment =
+      await this.appointmentModel.create(createAppointmentDto);
+    return appointment;
   }
 
   async findAll(): Promise<Appointment[]> {
@@ -42,17 +35,34 @@ export class AppointmentsService {
   }
 
   async findOne(id: number): Promise<Appointment> {
-    return await this.appointmentModel.findByPk(id);
+    const appointment = await this.appointmentModel.findByPk(id, {
+      include: [
+        { model: Customer },
+        { model: Store },
+        { model: DeviceModel },
+        { model: Fault },
+      ],
+    });
+    if (!appointment) {
+      throw new NotFoundException(`Appointment with ID ${id} not found`);
+    }
+    return appointment;
   }
 
   async update(
     id: number,
     updateAppointmentDto: UpdateAppointmentDto,
   ): Promise<Appointment> {
+    console.log('UpdateAppointmentDto:', updateAppointmentDto);
+
     const appointment = await this.findOne(id);
     if (!appointment) {
-      throw new Error(`Appointment with ID ${id} not found`);
+      console.log(`Appointment with ID ${id} not found`);
+      throw new NotFoundException(`Appointment with ID ${id} not found`);
     }
+
+    console.log('Original Appointment:', appointment);
+
     appointment.date = updateAppointmentDto.date || appointment.date;
     appointment.time = updateAppointmentDto.time || appointment.time;
     appointment.customerId =
@@ -62,23 +72,26 @@ export class AppointmentsService {
       updateAppointmentDto.deviceModelId || appointment.deviceModelId;
     appointment.faultId = updateAppointmentDto.faultId || appointment.faultId;
 
-    return await appointment.save();
+    const updatedAppointment = await appointment.save();
+
+    console.log('Updated Appointment:', updatedAppointment);
+
+    return updatedAppointment;
   }
 
   async remove(id: number): Promise<void> {
     const appointment = await this.findOne(id);
-    if (appointment) {
-      await appointment.destroy();
+    if (!appointment) {
+      throw new NotFoundException(`Appointment with ID ${id} not found`);
     }
+    await appointment.destroy();
   }
+
   async updateIsArchived(
     id: number,
     isArchived: boolean,
   ): Promise<Appointment> {
-    const appointment = await this.appointmentModel.findByPk(id);
-    if (!appointment) {
-      throw new NotFoundException('Appointment not found');
-    }
+    const appointment = await this.findOne(id);
     appointment.isArchived = isArchived;
     await appointment.save();
     return appointment;

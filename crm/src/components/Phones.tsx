@@ -18,7 +18,7 @@ import { DeviceModel } from "../Types/DeviceModel";
 
 const Phones = () => {
    const [form] = Form.useForm();
-   const { Models, isLoading, isError } = useDeviceModel();
+   const { Models, isLoading, isError, revalidate } = useDeviceModel();
    const [selectedModel, setSelectedModel] = useState<DeviceModel | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -70,12 +70,14 @@ const Phones = () => {
       setSelectedModel(record);
       setIsModalOpen(true);
       form.setFieldsValue(record);
+      revalidate();
    };
 
    const handleDelete = async (record: any) => {
       try {
          await axios.delete(`http://localhost:3000/api/device-models/${record.id}`);
          message.success("Model deleted successfully");
+         revalidate();
       } catch (error) {
          message.error("Failed to delete model");
       }
@@ -85,6 +87,7 @@ const Phones = () => {
       setSelectedModel(null);
       form.resetFields();
       setIsModalOpen(true);
+      revalidate();
    };
 
    const handleModalClose = () => {
@@ -103,6 +106,7 @@ const Phones = () => {
             await axios.post("http://localhost:3000/api/device-models", values);
             message.success("Model added successfully");
          }
+         revalidate();
       } catch (error) {
          message.error("Failed to save model");
       }
