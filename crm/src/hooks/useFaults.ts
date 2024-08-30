@@ -8,7 +8,7 @@ export function useFaults() {
    const { data, error, isLoading, mutate } = useSWR<Fault[]>(url, fetcher);
    return {
       Faults: data,
-      error,
+      isError: error,
       isLoading,
       revalidate: mutate,
    };

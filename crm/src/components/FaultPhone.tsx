@@ -18,7 +18,7 @@ import { Fault } from "../Types/Fault";
 
 const FaultPhone = () => {
    const [form] = Form.useForm();
-   const { Faults, isLoading, error, revalidate } = useFaults();
+   const { Faults, isLoading, isError, revalidate } = useFaults();
    const [selectedFault, setSelectedFault] = useState<Fault | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -108,7 +108,7 @@ const FaultPhone = () => {
       handleModalClose();
    };
 
-   if (error) return <div>Failed to load faults</div>;
+   if (isError) return <div>Failed to load faults</div>;
 
    return (
       <>

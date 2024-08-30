@@ -61,16 +61,36 @@ export class AppointmentsService {
       throw new NotFoundException(`Appointment with ID ${id} not found`);
     }
 
-    console.log('Original Appointment:', appointment);
-
+    // Update date, time, and other basic fields
     appointment.date = updateAppointmentDto.date || appointment.date;
     appointment.time = updateAppointmentDto.time || appointment.time;
-    appointment.customerId =
-      updateAppointmentDto.customerId || appointment.customerId;
-    appointment.storeId = updateAppointmentDto.storeId || appointment.storeId;
-    appointment.deviceModelId =
-      updateAppointmentDto.deviceModelId || appointment.deviceModelId;
-    appointment.faultId = updateAppointmentDto.faultId || appointment.faultId;
+
+    // Update customer details
+    if (updateAppointmentDto.firstName || updateAppointmentDto.lastName) {
+      appointment.customer.firstName =
+        updateAppointmentDto.firstName || appointment.customer.firstName;
+      appointment.customer.lastName =
+        updateAppointmentDto.lastName || appointment.customer.lastName;
+      await appointment.customer.save(); // Save the customer changes
+    }
+
+    // Update device model name
+    if (updateAppointmentDto.deviceModelName) {
+      appointment.deviceModel.name = updateAppointmentDto.deviceModelName;
+      await appointment.deviceModel.save(); // Save the device model changes
+    }
+
+    // Update fault name
+    if (updateAppointmentDto.faultName) {
+      appointment.fault.name = updateAppointmentDto.faultName;
+      await appointment.fault.save(); // Save the fault changes
+    }
+
+    // Update store name
+    if (updateAppointmentDto.storeName) {
+      appointment.store.name = updateAppointmentDto.storeName;
+      await appointment.store.save(); // Save the store changes
+    }
 
     console.log('Data before saving:', {
       date: appointment.date,
@@ -80,6 +100,7 @@ export class AppointmentsService {
       deviceModelId: appointment.deviceModelId,
       faultId: appointment.faultId,
     });
+
     try {
       const updatedAppointment = await appointment.save();
       console.log('Updated Appointment:', updatedAppointment);

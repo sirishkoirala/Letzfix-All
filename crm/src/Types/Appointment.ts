@@ -17,6 +17,7 @@ export interface Appointment {
    store: {
       id: string;
       name: string;
+      address1: string;
    };
    deviceModel: {
       id: string;

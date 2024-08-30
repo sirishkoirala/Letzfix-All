@@ -10,6 +10,7 @@ import FaultPhone from "./FaultPhone";
 import Phone from "./Phones";
 import AppointmentDescription from "./AppointmentDescription";
 import Appointments from "./Appointments";
+import Invoices from "./Invoices";
 
 const { Header, Content, Sider } = Layout;
 
@@ -52,10 +53,20 @@ const Dashboard = () => {
 
    return (
       <>
-         
          <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-               <div className="demo-logo-vertical" />
+               {/* <div className="demo-logo-vertical text-white" style={bg image : /logoDarkMode.jpg} /> */}
+               <div className="flex justify-center items-center pt-4 mb-8">
+                  <div
+                     className="demo-logo-vertical h-8 w-32"
+                     style={{
+                        backgroundImage: "url(/logoDarkMode.jpg)",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                     }}
+                  />
+               </div>
+
                <Menu theme="dark" defaultSelectedKeys={["/customer"]} mode="inline" items={items} />
             </Sider>
             <Layout>
@@ -79,6 +90,7 @@ const Dashboard = () => {
                         <Route path="/devices/laptops" element={<div>Laptop Device</div>} />
                         <Route path="/devices/tablets" element={<div>Tablet Device</div>} />
                         <Route path="/appointments" element={<Appointments />} />
+                        <Route path="/invoices" element={<Invoices />} />
                         <Route path="/appointments/:id" element={<AppointmentDescription />} />
                      </Routes>
                   </div>
