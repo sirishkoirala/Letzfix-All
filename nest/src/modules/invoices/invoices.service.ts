@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { Invoice } from './entities/invoice.entity';
 
 @Injectable()
 export class InvoicesService {
-  create(createInvoiceDto: CreateInvoiceDto) {
-    return 'This action adds a new invoice';
+  constructor(
+    @InjectModel(Invoice)
+    private invoiceModel: typeof Invoice,
+  ) {}
+
+  async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
+    return this.invoiceModel.create(createInvoiceDto);
   }
 
-  findAll() {
-    return `This action returns all invoices`;
+  async findAll(): Promise<Invoice[]> {
+    return this.invoiceModel.findAll({
+      include: { all: true },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
+  async findOne(id: string): Promise<Invoice> {
+    const invoice = await this.invoiceModel.findOne({
+      where: { id },
+      include: { all: true },
+    });
+
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
+    return invoice;
   }
 
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return `This action updates a #${id} invoice`;
+  async update(
+    id: string,
+    updateInvoiceDto: UpdateInvoiceDto,
+  ): Promise<Invoice> {
+    const invoice = await this.findOne(id);
+    return invoice.update(updateInvoiceDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
+  async remove(id: string): Promise<void> {
+    const invoice = await this.findOne(id);
+    await invoice.destroy();
   }
 }
