@@ -1,124 +1,76 @@
+import { Breadcrumb, Descriptions, Table, Alert } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Invoice } from "../Types/Invoice";
+import { Appointment } from "../Types/Appointment";
+import { useInvoices } from "../hooks/useInvoice";
 
-import { Table, Typography, Row, Col, Divider, Space } from "antd";
-
-const { Title, Text } = Typography;
+const columns = [
+   {
+      title: "Invoice Id",
+      dataIndex: "id",
+      key: "id",
+   },
+   {
+      title: "Appointment Id",
+      dataIndex: "appointmentId",
+      key: "appointmentId",
+   },
+   {
+      title: "Customer Name",
+      key: "customerId",
+      render: (_: any, data: Appointment) => `${data.customer.firstName} ${data.customer.lastName}`,
+   },
+   {
+      title: "Store Name",
+      dataIndex: ["store", "name"],
+      key: "storeId",
+   },
+   {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "date",
+      render: (text: any) => new Date(text).toLocaleDateString(), 
+   },
+   {
+      title: "Time",
+      dataIndex: "updatedAt",
+      key: "time",
+      render: (text: any) => new Date(text).toLocaleTimeString(), 
+   },
+];
 
 const Invoices = () => {
-   const columns = [
-      {
-         title: "Fault",
-         dataIndex: "fault",
-         key: "fault",
-      },
-      {
-         title: "Amount",
-         dataIndex: "amount",
-         key: "amount",
-         align: "right",
-      },
-      {
-         title: "Tax",
-         dataIndex: "tax",
-         key: "tax",
-         align: "right",
-      },
-      {
-         title: "Total",
-         dataIndex: "total",
-         key: "total",
-         align: "right",
-      },
-   ];
+   const { invoices, isLoading, isError } = useInvoices();
+   const navigate = useNavigate();
 
-   const data = [
-      {
-         key: "1",
-         fault: "Engine Tune-up",
-         amount: "$99.99",
-         tax: "$9.00",
-         total: "$108.99",
-      },
-      {
-         key: "2",
-         fault: "Brake Inspection",
-         amount: "$79.99",
-         tax: "$7.20",
-         total: "$87.19",
-      },
-      {
-         key: "3",
-         fault: "Oil Change",
-         amount: "$49.99",
-         tax: "$4.50",
-         total: "$54.49",
-      },
-   ];
+   if (isError) {
+      return <Alert message="Error" description="Failed to load invoices" type="error" />;
+   }
+
+
+   if (!invoices || invoices.length === 0) {
+      return <Alert message="No Invoices" description="No invoices available at the moment." type="info" />;
+   }
 
    return (
-      <div className="bg-background p-8 sm:p-12">
-         <div className="mx-auto max-w-[800px] rounded-lg border bg-white p-6 sm:p-10">
-            <Row gutter={[16, 16]} align="middle" justify="space-between">
-               <Col>
-                  <Space size="middle">
-                     <img
-                        src="/placeholder.svg"
-                        alt="Company Logo"
-                        width={48}
-                        height={48}
-                        style={{ borderRadius: "4px", objectFit: "cover" }}
-                     />
-                     <div>
-                        <Title level={2}>Acme Inc.</Title>
-                        <Text type="secondary">123 Main St, Anytown USA 12345</Text>
-                        <br />
-                        <Text type="secondary">support@acme.com | (555) 555-5555</Text>
-                     </div>
-                  </Space>
-               </Col>
-               <Col>
-                  <div style={{ textAlign: "right" }}>
-                     <Title level={2}>Invoice #1234</Title>
-                     <Text type="secondary">Issued: April 15, 2023</Text>
-                     <br />
-                     <Text type="secondary">Due: May 15, 2023</Text>
-                  </div>
-               </Col>
-            </Row>
-            <Divider />
-            <Row gutter={[16, 16]}>
-               <Col span={12}>
-                  <Title level={3}>Customer</Title>
-                  <Text type="secondary">Liam Johnson</Text>
-                  <br />
-                  <Text type="secondary">123 Main St, Anytown USA 12345</Text>
-                  <br />
-                  <Text type="secondary">liam@example.com</Text>
-                  <br />
-                  <Text type="secondary">(555) 555-5555</Text>
-               </Col>
-               <Col span={12}>
-                  <Title level={3}>Appointment</Title>
-                  <Text type="secondary">Date: April 20, 2023</Text>
-                  <br />
-                  <Text type="secondary">Time: 2:00 PM</Text>
-                  <br />
-                  <Text type="secondary">Service: Tune-up</Text>
-               </Col>
-            </Row>
-            <Divider />
-            <Title level={3}>Invoice Items</Title>
-            <Table columns={columns} dataSource={data} pagination={false} />
-            <Divider />
-            <Row justify="space-between" align="middle">
-               <Col>
-                  <Title level={3}>Total</Title>
-               </Col>
-               <Col>
-                  <Title level={2}>$250.67</Title>
-               </Col>
-            </Row>
-         </div>
-      </div>
+      <>
+         <Breadcrumb>
+            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>Invoices</Breadcrumb.Item>
+         </Breadcrumb>
+         <Descriptions title="Invoice Details" layout="vertical" bordered />
+         <Table<Invoice>
+            loading={isLoading}
+            columns={columns}
+            dataSource={invoices}
+            rowKey="invoiceId"
+            onRow={(record) => ({
+               onClick: () => {
+                  navigate(`/invoices/${record.id}`);
+               },
+            })}
+         />
+      </>
    );
 };
 

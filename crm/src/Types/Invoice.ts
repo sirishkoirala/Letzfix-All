@@ -9,8 +9,8 @@ export interface InvoiceItem {
    amount: number;
    tax: number;
    invoiceId: number;
-   fault?: Fault; 
-   invoice?: Invoice; 
+   fault?: Fault;
+   invoice?: Invoice;
 }
 
 export interface Invoice {
@@ -21,8 +21,9 @@ export interface Invoice {
    appointmentId: number;
    customerId: number;
    storeId: number;
-   invoiceItems?: InvoiceItem[]; 
-   appointment?: Appointment; 
-   customer?: Customer; 
-   store?: Store; 
+   createdAt: string;
+   invoiceItems?: InvoiceItem[];
+   appointment?: Appointment;
+   customer?: Customer;
+   store?: Store;
 }
