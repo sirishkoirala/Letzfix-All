@@ -25,6 +25,7 @@ import useAppointment from "../hooks/useAppointment";
 import { useFaults } from "../hooks/useFaults";
 import { useStores } from "../hooks/useStores";
 import { useDeviceModel } from "../hooks/useDeviceModel";
+import AppointmentBreadcrumb from "./AppointmentBreadcrumb";
 
 const { Option } = Select;
 
@@ -65,6 +66,7 @@ const AppointmentDescription = () => {
             store: appointment.store.name,
             date: appointment.date,
             time: appointment.time,
+            fault: appointment.fault.name,
          });
       }
    }, [appointment, form, invoiceForm]);
@@ -171,25 +173,53 @@ const AppointmentDescription = () => {
       }
    };
 
-   const onInvoiceFinish = async (values: any) => {
-      try {
-         const { amount } = values;
-         const tax = (amount * 10) / 100;
+const onInvoiceFinish = async (values: any) => {
+   try {
+      // Prepare the invoice data
+      const { customer, store, date, time, fault, items } = values;
+      console.log(values)
+      console.log(items)
+      const amount = items.reduce((acc: number, item: any) => acc + item.amount, 0);
+      const tax = (amount * 10) / 100;
 
-         const newInvoice = {
-            ...values,
-            tax,
-         };
+      const newInvoice = {
+         invoiceNumber: `INV-${Date.now()}`, // Generate a unique invoice number
+         invoiceDate: dayjs().format("YYYY-MM-DD"),
+         invoiceDueDate: dayjs().add(30, "day").format("YYYY-MM-DD"), // Assuming 30 days payment term
+         appointmentId: appointment.id, // Associated appointment ID
+         customerId: appointment.customer.id, // Associated customer ID
+         storeId: appointment.store.id, // Associated store ID
+         amount,
+         tax,
+         totalAmount: amount + tax,
+      };
 
-         await axios.post(`http://localhost:3000/api/invoices`, newInvoice);
+      // Post the invoice data
+      const invoiceResponse = await axios.post(`http://localhost:3000/api/invoices`, newInvoice);
+      const createdInvoice = invoiceResponse.data;
 
-         message.success("Invoice created successfully.");
-         setIsInvoiceModalOpen(false);
-         revalidateAppointment();
-      } catch (error) {
-         message.error("Failed to create the invoice.");
-      }
-   };
+      // Prepare and post the invoice items data
+      const invoiceItems = items.map((item: any) => ({
+         invoiceId: createdInvoice.id,
+         faultId: item.fault,
+         amount: item.amount,
+         tax: (item.amount * 10) / 100,
+      }));
+
+      await Promise.all(
+         invoiceItems.map(async (item) => {
+            await axios.post(`http://localhost:3000/api/invoice-items`, item);
+         })
+      );
+
+      message.success("Invoice and items created successfully.");
+      setIsInvoiceModalOpen(false);
+      revalidateAppointment();
+   } catch (error) {
+      message.error("Failed to create the invoice or invoice items.");
+   }
+};
+
 
    // const navigate = useNavigate();
    const handleInvoiceClick = () => {
@@ -198,11 +228,7 @@ const AppointmentDescription = () => {
 
    return (
       <>
-         <Breadcrumb>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Appointments</Breadcrumb.Item>
-            <Breadcrumb.Item>Details</Breadcrumb.Item>
-         </Breadcrumb>
+         <AppointmentBreadcrumb />
          <div className="flex items-center justify-between mb-4">
             <h2 className="font-medium text-base">{`Appointment Details for ID: ${id}`}</h2>
             <Space>
@@ -400,14 +426,41 @@ const AppointmentDescription = () => {
                      </Form.Item>
                   </Col>
                </Row>
+               <Row gutter={16}>
+                  <Col span={12}>
+                     <Form.Item
+                        label="Fault"
+                        name={["items", 0, "fault"]} 
+                        rules={[{ required: true, message: "Please select a fault" }]}
+                     >
+                        <Select placeholder="Select a fault">
+                           {Faults.map((fault) => (
+                              <Option key={fault.id} value={fault.id}>
+                                 {fault.name}
+                              </Option>
+                           ))}
+                        </Select>
+                     </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                     <Form.Item
+                        label="Amount"
+                        name={["items", 0, "amount"]} // Specify the path for the first item
+                        rules={[{ required: true, message: "Please enter the amount" }]}
+                     >
+                        <Input prefix="$" />
+                     </Form.Item>
+                  </Col>
+               </Row>
 
                <Form.List name="items">
+                  {/* Ensure that this is within the parent form structure */}
                   {(fields, { add, remove }) => (
                      <div style={{ display: "flex", rowGap: 16, flexDirection: "column" }}>
                         {fields.map((field) => (
                            <Card
                               size="small"
-                              title={`Fault ${field.name + 1}`}
+                              title={`Fault ${field.name + 2}`}
                               key={field.key}
                               extra={
                                  <CloseOutlined
@@ -422,6 +475,7 @@ const AppointmentDescription = () => {
                                     <Form.Item
                                        label="Fault"
                                        name={[field.name, "fault"]}
+                                       fieldKey={[field.fieldKey, "fault"]}
                                        rules={[{ required: true, message: "Please select a fault" }]}
                                     >
                                        <Select placeholder="Select a fault" loading={isLoadingFaults}>
@@ -435,8 +489,9 @@ const AppointmentDescription = () => {
                                  </Col>
                                  <Col span={12}>
                                     <Form.Item
-                                       name={[field.name, "amount"]}
                                        label="Amount"
+                                       name={[field.name, "amount"]}
+                                       fieldKey={[field.fieldKey, "amount"]}
                                        rules={[{ required: true, message: "Please enter the amount" }]}
                                     >
                                        <Input prefix="$" />

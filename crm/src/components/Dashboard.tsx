@@ -56,9 +56,9 @@ const Dashboard = () => {
          <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                {/* <div className="demo-logo-vertical text-white" style={bg image : /logoDarkMode.jpg} /> */}
-               <div className="flex justify-center items-center pt-4 mb-8">
+               <div className="flex justify-center items-center pt-4 mb-2">
                   <div
-                     className="demo-logo-vertical h-8 w-32"
+                     className="demo-logo-vertical h-6 w-24"
                      style={{
                         backgroundImage: "url(/logoDarkMode.jpg)",
                         backgroundSize: "cover",
