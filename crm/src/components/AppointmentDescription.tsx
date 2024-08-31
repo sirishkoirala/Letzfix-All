@@ -16,6 +16,7 @@ import {
    Row,
    Col,
    message,
+   Card,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -190,7 +191,7 @@ const AppointmentDescription = () => {
       }
    };
 
-   const navigate = useNavigate();
+   // const navigate = useNavigate();
    const handleInvoiceClick = () => {
       setIsInvoiceModalOpen(true);
    };
@@ -237,7 +238,6 @@ const AppointmentDescription = () => {
 
          <Modal title="Edit Appointment" open={isModalOpen} onOk={form.submit} onCancel={handleModalClose} centered>
             <Form form={form} onFinish={onFinish} layout="vertical">
-               {/* Row for First Name and Last Name */}
                <Row gutter={16}>
                   <Col span={12}>
                      <Form.Item
@@ -376,24 +376,82 @@ const AppointmentDescription = () => {
             centered
          >
             <Form form={invoiceForm} onFinish={onInvoiceFinish} layout="vertical">
-               <Form.Item name="appointmentId" label="Appointment ID">
-                  <Input disabled />
-               </Form.Item>
-               <Form.Item name="customer" label="Customer">
-                  <Input disabled />
-               </Form.Item>
-               <Form.Item name="store" label="Store">
-                  <Input disabled />
-               </Form.Item>
-               <Form.Item name="date" label="Date">
-                  <Input disabled />
-               </Form.Item>
-               <Form.Item name="time" label="Time">
-                  <Input disabled />
-               </Form.Item>
-               <Form.Item name="amount" label="Amount" rules={[{ required: true, message: "Please enter the amount" }]}>
-                  <Input prefix="$" />
-               </Form.Item>
+               <Row gutter={16}>
+                  <Col span={12}>
+                     <Form.Item name="customer" label="Customer Name">
+                        <Input disabled />
+                     </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                     <Form.Item name="store" label="Store">
+                        <Input disabled />
+                     </Form.Item>
+                  </Col>
+               </Row>
+               <Row gutter={16}>
+                  <Col span={12}>
+                     <Form.Item name="date" label="Date">
+                        <Input disabled />
+                     </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                     <Form.Item name="time" label="Time">
+                        <Input disabled />
+                     </Form.Item>
+                  </Col>
+               </Row>
+
+               <Form.List name="items">
+                  {(fields, { add, remove }) => (
+                     <div style={{ display: "flex", rowGap: 16, flexDirection: "column" }}>
+                        {fields.map((field) => (
+                           <Card
+                              size="small"
+                              title={`Fault ${field.name + 1}`}
+                              key={field.key}
+                              extra={
+                                 <CloseOutlined
+                                    onClick={() => {
+                                       remove(field.name);
+                                    }}
+                                 />
+                              }
+                           >
+                              <Row gutter={16}>
+                                 <Col span={12}>
+                                    <Form.Item
+                                       label="Fault"
+                                       name={[field.name, "fault"]}
+                                       rules={[{ required: true, message: "Please select a fault" }]}
+                                    >
+                                       <Select placeholder="Select a fault" loading={isLoadingFaults}>
+                                          {Faults.map((fault) => (
+                                             <Option key={fault.id} value={fault.id}>
+                                                {fault.name}
+                                             </Option>
+                                          ))}
+                                       </Select>
+                                    </Form.Item>
+                                 </Col>
+                                 <Col span={12}>
+                                    <Form.Item
+                                       name={[field.name, "amount"]}
+                                       label="Amount"
+                                       rules={[{ required: true, message: "Please enter the amount" }]}
+                                    >
+                                       <Input prefix="$" />
+                                    </Form.Item>
+                                 </Col>
+                              </Row>
+                           </Card>
+                        ))}
+
+                        <Button type="dashed" onClick={() => add()} block>
+                           + Add Fault
+                        </Button>
+                     </div>
+                  )}
+               </Form.List>
             </Form>
          </Modal>
       </>
