@@ -1,17 +1,12 @@
-
 import {
   Controller,
   Request,
   Post,
   UseGuards,
   Body,
-  BadRequestException,
-  Req,
   Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-// import { CreateUserDto } from '../users/dto/create-user.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
@@ -36,13 +31,7 @@ export class AuthController {
       lastName,
       email,
       password,
-    )
+    );
     return user;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }
