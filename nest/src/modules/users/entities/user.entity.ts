@@ -2,49 +2,49 @@ import { Table, Column, Model, DataType, Default } from 'sequelize-typescript';
 
 @Table({
   tableName: 'users',
-//   timestamps: true, // Automatically manage createdAt and updatedAt fields
 })
 export class User extends Model<User> {
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   })
   id: number;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: false,
+    // allowNull: false,
   })
   firstName: string;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: false,
+    // allowNull: false,
   })
   lastName: string;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: false,
-    unique: true,
+    // allowNull: false,
+    // unique: true,
   })
   email: string;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: false,
+    // allowNull: false,
   })
-  passwordHash: string;
+  password: string;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: true,
+    // allowNull: true,
   })
   invitationCode: string;
 
   @Column({
     type: DataType.DATE,
-    allowNull: true,
+    // allowNull: true,
   })
   invitationCodeExpiresAt: Date;
 

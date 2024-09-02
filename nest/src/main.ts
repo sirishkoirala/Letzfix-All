@@ -12,14 +12,9 @@ async function bootstrap() {
     credentials: true,
   };
   app.enableCors(corsOptions);
-  
+
   // global prefix
   app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 bootstrap();
-
-
-
-
-

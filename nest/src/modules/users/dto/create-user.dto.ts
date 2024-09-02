@@ -12,16 +12,4 @@ export class CreateUserDto {
 
   @IsString()
   readonly password: string; 
-
-  @IsOptional()
-  @IsString()
-  readonly invitationCode?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly isVerified?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly isActive?: boolean;
 }
