@@ -6,8 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
   UseGuards,
+  Request,
+  NotFoundException,
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -19,61 +20,78 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
+  // @Get()
+  // findAll() {
+  //   return this.appointmentsService.findAll();
+  // }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
+  async findAppointments(@Request() req) {
+    const storeId = req.user.storeId; 
+    const allAppointments = await this.appointmentsService.findAll();
+    const filteredAppointments = allAppointments.filter(
+      (appointment) => appointment.storeId === storeId,
+    );
+    return filteredAppointments;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
+  async findOne(@Param('id') id: string, @Request() req) {
+    const storeId = req.user.storeId;
+    const appointment = await this.appointmentsService.findOne(+id);
+    if (appointment.storeId !== storeId) {
+      throw new NotFoundException('Appointment not found for this store');
+    }
+    return appointment;
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
+  create(@Body() createAppointmentDto: CreateAppointmentDto, @Request() req) {
+    createAppointmentDto.storeId = req.user.storeId;
     return this.appointmentsService.create(createAppointmentDto);
   }
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
-  }
+
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() updateAppointmentDto: UpdateAppointmentDto,
+    @Request() req,
   ): Promise<Appointment> {
-    console.log('Controller: update appointment');
-
-    try {
-      const updatedAppointment = await this.appointmentsService.update(
-        id,
-        updateAppointmentDto,
-      );
-      console.log(
-        'Updated appointment returned from service:',
-        updatedAppointment,
-      );
-      return updatedAppointment;
-    } catch (error) {
-      console.error('Error in controller:', error);
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(`Appointment with ID ${id} not found`);
-      }
-      throw new Error('Failed to update appointment');
+    const storeId = req.user.storeId;
+    const appointment = await this.appointmentsService.findOne(id);
+    if (appointment.storeId !== storeId) {
+      throw new NotFoundException('Appointment not found for this store');
     }
+    return this.appointmentsService.update(id, updateAppointmentDto);
   }
+
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Delete(':id')
+  async remove(@Param('id') id: string, @Request() req) {
+    const storeId = req.user.storeId;
+    const appointment = await this.appointmentsService.findOne(+id);
+    if (appointment.storeId !== storeId) {
+      throw new NotFoundException('Appointment not found for this store');
+    }
+    return this.appointmentsService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/archive')
   async updateIsArchived(
     @Param('id') id: string,
     @Body('isArchived') isArchived: boolean,
+    @Request() req,
   ) {
-    return await this.appointmentsService.updateIsArchived(
-      Number(id),
-      isArchived,
-    );
+    const storeId = req.user.storeId;
+    const appointment = await this.appointmentsService.findOne(+id);
+    if (appointment.storeId !== storeId) {
+      throw new NotFoundException('Appointment not found for this store');
+    }
+    return this.appointmentsService.updateIsArchived(Number(id), isArchived);
   }
 }

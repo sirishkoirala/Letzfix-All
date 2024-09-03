@@ -20,9 +20,17 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    console.log(user)
+    const payload = {
+      email: user.dataValues.email,
+      sub: user.dataValues.id,
+      storeId: user.dataValues.storeId,
+    };
+    const token = this.jwtService.sign(payload);
+    // console.log(payload)
+    // console.log('Generated Token:', token);
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: token,
     };
   }
 
@@ -44,7 +52,11 @@ export class AuthService {
 
     return {
       user,
-      access_token: this.jwtService.sign({ email: user.email, sub: user.id }),
+      access_token: this.jwtService.sign({
+        email: user.email,
+        sub: user.id,
+        storeId: user.storeId,
+      }),
     };
   }
 }

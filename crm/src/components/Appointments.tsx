@@ -21,8 +21,9 @@ const columns = [
    },
    {
       title: "Customer Name",
+      dataIndex: "customerId",
       key: "customerId",
-      render: (_: any, data: Appointment) => `${data.customer.firstName} ${data.customer.lastName}`,
+      // render: (_: any, data: Appointment) => `${data.customer.firstName} ${data.customer.lastName}`,
    },
    {
       title: "Store Name",

@@ -121,19 +121,19 @@ const AppointmentDescription = () => {
       return <Alert message="Error" description="Appointment not found." type="error" />;
    }
 
-   const toggleArchive = async () => {
-      try {
-         await axios.patch(`http://localhost:3000/api/appointments/${id}`, {
-            isArchived: !isArchived,
-            config
-         });
-         setIsArchived(!isArchived);
-         message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
-         revalidateAppointment();
-      } catch (error) {
-         message.error("Failed to update the archive status.");
-      }
-   };
+   // const toggleArchive = async () => {
+   //    try {
+   //       await axios.patch(`http://localhost:3000/api/appointments/${id}`, {
+   //          isArchived: !isArchived,
+   //          config
+   //       });
+   //       setIsArchived(!isArchived);
+   //       message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
+   //       revalidateAppointment();
+   //    } catch (error) {
+   //       message.error("Failed to update the archive status.");
+   //    }
+   // };
 
    const handleEdit = () => {
       setIsModalOpen(true);
@@ -253,7 +253,7 @@ const AppointmentDescription = () => {
                >
                   <Button danger>Delete</Button>
                </Popconfirm>
-               <Button onClick={toggleArchive}>{isArchived ? "Unarchive" : "Archive"}</Button>
+               {/* <Button onClick={toggleArchive}>{isArchived ? "Unarchive" : "Archive"}</Button> */}
             </Space>
          </div>
          <Descriptions layout="vertical" bordered>

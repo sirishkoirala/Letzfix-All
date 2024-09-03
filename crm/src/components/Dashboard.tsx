@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ExclamationCircleOutlined, FieldTimeOutlined, FileDoneOutlined,LaptopOutlined, UserOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined, FieldTimeOutlined, FileDoneOutlined,LaptopOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { IconMapPin } from "@tabler/icons-react";
@@ -12,6 +12,8 @@ import AppointmentDescription from "./AppointmentDescription";
 import Appointments from "./Appointments";
 import InvoiceDescription from "./InvoiceDescription";
 import Invoices from "./Invoices";
+import Users from "./Users";
+import UserDescription from "./UserDescription";
 
 const { Header, Content, Sider } = Layout;
 
@@ -40,6 +42,7 @@ const items: MenuItem[] = [
    ]),
    getItem("Appointments", "/appointments", <FieldTimeOutlined />),
    getItem("Invoices", "/invoices", <FileDoneOutlined />),
+   getItem("Users", "/users",<UserAddOutlined/>)
 ];
 
 const Dashboard = () => {
@@ -95,6 +98,8 @@ const Dashboard = () => {
                         <Route path="/appointments/:id" element={<AppointmentDescription />} />
                         <Route path="/invoices" element={<Invoices />} />
                         <Route path="/invoices/:id" element={<InvoiceDescription />} />
+                        <Route path="/users" element={<Users/>} />
+                        <Route path="/users/:id" element={<UserDescription/>} />
                      </Routes>
                   </div>
                </Content>

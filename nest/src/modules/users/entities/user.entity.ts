@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, Default } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Store } from 'src/modules/stores/entities/store.entity';
 
 @Table({
   tableName: 'users',
@@ -59,4 +60,11 @@ export class User extends Model<User> {
     type: DataType.BOOLEAN,
   })
   isActive: boolean;
+
+  @ForeignKey(() => Store)
+  @Column
+  storeId: number;
+
+  @BelongsTo(() => Store)
+  store: Store;
 }

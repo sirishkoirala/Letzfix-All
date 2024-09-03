@@ -1,11 +1,12 @@
-import { API_HOST } from "../constants.js";
-import { Appointment } from "../Types/Appointment.js";
-import { fetcher } from "../utils.js";
+import { API_HOST } from "../constants";
+import { Appointment } from "../Types/Appointment";
 import useSWR from "swr";
+import { fetcher } from "../utils";
 
 export default function useAppointment() {
    const url = `${API_HOST}/appointments`;
    const { data, isLoading, error, mutate } = useSWR<Appointment[]>(url, fetcher);
+
    return {
       appointments: data,
       isLoading,
