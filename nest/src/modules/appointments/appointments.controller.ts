@@ -28,11 +28,9 @@ export class AppointmentsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAppointments(@Request() req) {
-    const storeId = req.user.storeId; 
-    const allAppointments = await this.appointmentsService.findAll();
-    const filteredAppointments = allAppointments.filter(
-      (appointment) => appointment.storeId === storeId,
-    );
+    const storeId = req.user.storeId;
+    const filteredAppointments =
+      await this.appointmentsService.findAllByStoreId(storeId);
     return filteredAppointments;
   }
 

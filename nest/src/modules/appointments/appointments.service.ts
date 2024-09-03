@@ -23,11 +23,16 @@ export class AppointmentsService {
     return appointment;
   }
 
-  async findAllByStoreId(storeId: number): Promise<Appointment[]> {
-    if (!storeId) {
-      throw new Error('storeId is undefined or invalid !!!!');
-    }
-    return this.appointmentModel.findAll({ where: { storeId } });
+  async findAllByStoreId(storeId: string) {
+    return await this.appointmentModel.findAll({
+      where: { storeId },
+      include: [
+        { model: Customer },
+        { model: Store },
+        { model: DeviceModel },
+        { model: Fault },
+      ],
+    });
   }
 
   async findAll(): Promise<Appointment[]> {
