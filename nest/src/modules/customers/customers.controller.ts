@@ -18,12 +18,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
-  @Post()
-  create(@Body() createCustomerDto: CreateCustomerDto) {
-    return this.customersService.create(createCustomerDto);
-  }
-
-  // @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.customersService.findAll();
@@ -34,6 +28,13 @@ export class CustomersController {
     return this.customersService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(@Body() createCustomerDto: CreateCustomerDto) {
+    return this.customersService.create(createCustomerDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -42,6 +43,7 @@ export class CustomersController {
     return this.customersService.update(+id, updateCustomerDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customersService.remove(+id);

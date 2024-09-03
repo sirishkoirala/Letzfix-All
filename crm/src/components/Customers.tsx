@@ -17,6 +17,7 @@ import {
 import useCustomer from "../hooks/useCustomer";
 import { UserOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 import { Customer } from "../Types/Customer";
+import config from "../config";
 
 const Customers = () => {
    const [form] = Form.useForm();
@@ -87,7 +88,7 @@ const Customers = () => {
 
    const handleDelete = async (record: any) => {
       try {
-         await axios.delete(`http://localhost:3000/api/customers/${record.id}`);
+         await axios.delete(`http://localhost:3000/api/customers/${record.id}`,config);
          message.success("Customer deleted successfully");
          revalidate()
       } catch (error) {
@@ -110,13 +111,20 @@ const Customers = () => {
 
    const onFinish = async (values: any) => {
       try {
+
+         const token = localStorage.getItem("access_token");
+         const config = {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         }
          if (selectedCustomer) {
             // Update customer
-            await axios.patch(`http://localhost:3000/api/customers/${selectedCustomer.id}`, values);
+            await axios.patch(`http://localhost:3000/api/customers/${selectedCustomer.id}`, values,config);
             message.success("Customer updated successfully");
          } else {
             // Add customer
-            await axios.post("http://localhost:3000/api/customers", values);
+            await axios.post("http://localhost:3000/api/customers", values,config);
             message.success("Customer added successfully");
          }
          revalidate();

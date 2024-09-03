@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import { Store } from "../Types/Store";
 import axios from "axios";
+import config from "../config";
 
 const Stores = () => {
    const [form] = Form.useForm();
@@ -114,7 +115,7 @@ const Stores = () => {
 
    const handleDelete = async (record: any) => {
       try {
-         await axios.delete(`http://localhost:3000/api/stores/${record.id}`);
+         await axios.delete(`http://localhost:3000/api/stores/${record.id}`,config);
          message.success("Store deleted successfully");
          revalidate(); 
       } catch (error) {
@@ -139,11 +140,11 @@ const Stores = () => {
       try {
          if (selectedStore) {
             // Update store
-            await axios.patch(`http://localhost:3000/api/stores/${selectedStore.id}`, values);
+            await axios.patch(`http://localhost:3000/api/stores/${selectedStore.id}`, values,config);
             message.success("Store updated successfully");
          } else {
             // Add store
-            await axios.post("http://localhost:3000/api/stores", values);
+            await axios.post("http://localhost:3000/api/stores", values,config);
             message.success("Store added successfully");
          }
          revalidate();

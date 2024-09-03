@@ -21,6 +21,7 @@ export class CustomersService {
     return await customer.save();
   }
 
+  
   async findAll(): Promise<Customer[]> {
     return await this.customerModel.findAll();
   }

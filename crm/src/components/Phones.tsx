@@ -15,6 +15,7 @@ import {
 } from "antd";
 import { useDeviceModel } from "../hooks/useDeviceModel";
 import { DeviceModel } from "../Types/DeviceModel";
+import config from "../config";
 
 const Phones = () => {
    const [form] = Form.useForm();
@@ -75,7 +76,7 @@ const Phones = () => {
 
    const handleDelete = async (record: any) => {
       try {
-         await axios.delete(`http://localhost:3000/api/device-models/${record.id}`);
+         await axios.delete(`http://localhost:3000/api/device-models/${record.id}`,config);
          message.success("Model deleted successfully");
          revalidate();
       } catch (error) {
@@ -99,15 +100,16 @@ const Phones = () => {
       try {
          if (selectedModel) {
             // Update model
-            await axios.patch(`http://localhost:3000/api/device-models/${selectedModel.id}`, values);
+            await axios.patch(`http://localhost:3000/api/device-models/${selectedModel.id}`, values,config);
             message.success("Model updated successfully");
          } else {
             // Add model
-            await axios.post("http://localhost:3000/api/device-models", values);
+            await axios.post("http://localhost:3000/api/device-models",values,config);
             message.success("Model added successfully");
          }
          revalidate();
-      } catch (error) {
+      } catch (error: any) {
+         console.error("Error adding model:", error.response ? error.response.data : error.message);
          message.error("Failed to save model");
       }
       handleModalClose();

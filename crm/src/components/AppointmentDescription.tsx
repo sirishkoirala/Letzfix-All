@@ -25,6 +25,7 @@ import { useFaults } from "../hooks/useFaults";
 import { useStores } from "../hooks/useStores";
 import { useDeviceModel } from "../hooks/useDeviceModel";
 import AppointmentBreadcrumb from "./AppointmentBreadcrumb";
+import config from "../config";
 // import { useInvoices } from "../hooks/useInvoice";
 
 const { Option } = Select;
@@ -124,6 +125,7 @@ const AppointmentDescription = () => {
       try {
          await axios.patch(`http://localhost:3000/api/appointments/${id}`, {
             isArchived: !isArchived,
+            config
          });
          setIsArchived(!isArchived);
          message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
@@ -139,7 +141,7 @@ const AppointmentDescription = () => {
 
    const handleDelete = async () => {
       try {
-         await axios.delete(`http://localhost:3000/api/appointments/${id}`);
+         await axios.delete(`http://localhost:3000/api/appointments/${id}`,config);
          message.success("Appointment deleted successfully.");
          revalidateAppointment();
       } catch (error) {
@@ -166,7 +168,7 @@ const AppointmentDescription = () => {
             isArchived,
          };
 
-         await axios.patch(`http://localhost:3000/api/appointments/${id}`, updatedAppointment);
+         await axios.patch(`http://localhost:3000/api/appointments/${id}`, updatedAppointment,config);
 
          message.success("Appointment updated successfully.");
          setIsModalOpen(false);
@@ -200,7 +202,7 @@ const AppointmentDescription = () => {
          };
 
          // post
-         const invoiceResponse = await axios.post(`http://localhost:3000/api/invoices`, newInvoice);
+         const invoiceResponse = await axios.post(`http://localhost:3000/api/invoices`, newInvoice,config);
          const createdInvoice = invoiceResponse.data;
 
          const invoiceItems = items.map((item: any) => ({
@@ -211,7 +213,7 @@ const AppointmentDescription = () => {
          }));
 
          await Promise.all(
-            invoiceItems.map((item: any) => axios.post(`http://localhost:3000/api/invoice-items`, item))
+            invoiceItems.map((item: any) => axios.post(`http://localhost:3000/api/invoice-items`, item,config))
          );
 
          message.success("Invoice and items created successfully.");

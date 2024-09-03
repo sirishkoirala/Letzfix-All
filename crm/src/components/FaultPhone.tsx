@@ -15,6 +15,7 @@ import {
 } from "antd";
 import { useFaults } from "../hooks/useFaults";
 import { Fault } from "../Types/Fault";
+import config from "../config";
 
 const FaultPhone = () => {
    const [form] = Form.useForm();
@@ -70,7 +71,7 @@ const FaultPhone = () => {
 
    const handleDelete = async (record: any) => {
       try {
-         await axios.delete(`http://localhost:3000/api/faults/${record.id}`);
+         await axios.delete(`http://localhost:3000/api/faults/${record.id}`, config);
          message.success("Fault deleted successfully");
          revalidate();
       } catch (error) {
@@ -94,11 +95,11 @@ const FaultPhone = () => {
       try {
          if (selectedFault) {
             // Update fault
-            await axios.patch(`http://localhost:3000/api/faults/${selectedFault.id}`, values);
+            await axios.patch(`http://localhost:3000/api/faults/${selectedFault.id}`, values, config);
             message.success("Fault updated successfully");
          } else {
             // Add fault
-            await axios.post("http://localhost:3000/api/faults", values);
+            await axios.post("http://localhost:3000/api/faults",values,config);
             message.success("Fault added successfully");
          }
          revalidate();
