@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { ExclamationCircleOutlined, FieldTimeOutlined, FileDoneOutlined,LaptopOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
+import {
+   ExclamationCircleOutlined,
+   FieldTimeOutlined,
+   FileDoneOutlined,
+   LaptopOutlined,
+   UserAddOutlined,
+   UserOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, Button, theme, message } from "antd";
 import { IconMapPin } from "@tabler/icons-react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Customer from "./Customers";
 import Stores from "./Stores";
 import FaultPhone from "./FaultPhone";
@@ -14,6 +21,10 @@ import InvoiceDescription from "./InvoiceDescription";
 import Invoices from "./Invoices";
 import Users from "./Users";
 import UserDescription from "./UserDescription";
+
+interface DashboardProps {
+   logout: () => void;
+}
 
 const { Header, Content, Sider } = Layout;
 
@@ -42,11 +53,12 @@ const items: MenuItem[] = [
    ]),
    getItem("Appointments", "/appointments", <FieldTimeOutlined />),
    getItem("Invoices", "/invoices", <FileDoneOutlined />),
-   getItem("Users", "/users",<UserAddOutlined/>)
+   getItem("Users", "/users", <UserAddOutlined />),
 ];
 
-const Dashboard = () => {
+const Dashboard = ({ logout }: DashboardProps) => {
    const [collapsed, setCollapsed] = useState(false);
+   const navigate = useNavigate();
 
    const {
       token: { colorBgContainer, borderRadiusLG },
@@ -56,11 +68,16 @@ const Dashboard = () => {
       document.title = "Dashboard";
    }, []);
 
+   const handleLogout = () => {
+      message.success("Log Out Sucessfull !");
+      navigate("/login");
+      logout();
+   };
+
    return (
       <>
          <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-               {/* <div className="demo-logo-vertical text-white" style={bg image : /logoDarkMode.jpg} /> */}
                <div className="flex justify-center items-center pt-4 mb-2">
                   <div
                      className="demo-logo-vertical h-6 w-24"
@@ -75,7 +92,20 @@ const Dashboard = () => {
                <Menu theme="dark" defaultSelectedKeys={["/customer"]} mode="inline" items={items} />
             </Sider>
             <Layout>
-               <Header style={{ padding: 0, background: colorBgContainer }} />
+               <Header
+                  style={{
+                     padding: 0,
+                     background: colorBgContainer,
+                     display: "flex",
+                     justifyContent: "flex-end",
+                     alignItems: "center",
+                     paddingRight: "16px",
+                  }}
+               >
+                  <Button type="primary" onClick={handleLogout}>
+                     Logout
+                  </Button>
+               </Header>
                <Content style={{ margin: "0 16px" }}>
                   <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
                   <div
@@ -98,8 +128,8 @@ const Dashboard = () => {
                         <Route path="/appointments/:id" element={<AppointmentDescription />} />
                         <Route path="/invoices" element={<Invoices />} />
                         <Route path="/invoices/:id" element={<InvoiceDescription />} />
-                        <Route path="/users" element={<Users/>} />
-                        <Route path="/users/:id" element={<UserDescription/>} />
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/users/:id" element={<UserDescription />} />
                      </Routes>
                   </div>
                </Content>

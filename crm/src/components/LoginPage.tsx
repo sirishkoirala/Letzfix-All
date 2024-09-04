@@ -3,7 +3,10 @@ import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
+interface LoginPageProps {
+   login: () => void;
+}
+const LoginPage = ({ login }: LoginPageProps) => {
    const [inputs, setInputs] = useState({
       email: "",
       password: "",
@@ -30,6 +33,7 @@ const LoginPage = () => {
             message.success("Login successfull !");
             navigate("/dashboard");
          }
+         login();
       } catch (error) {
          message.error("Login Failed !!!");
       }
