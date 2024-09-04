@@ -104,14 +104,14 @@ export class AppointmentsService {
       await appointment.store.save(); // Save the store changes
     }
 
-    console.log('Data before saving:', {
-      date: appointment.date,
-      time: appointment.time,
-      customerId: appointment.customerId,
-      storeId: appointment.storeId,
-      deviceModelId: appointment.deviceModelId,
-      faultId: appointment.faultId,
-    });
+    // console.log('Data before saving:', {
+    //   date: appointment.date,
+    //   time: appointment.time,
+    //   customerId: appointment.customerId,
+    //   storeId: appointment.storeId,
+    //   deviceModelId: appointment.deviceModelId,
+    //   faultId: appointment.faultId,
+    // });
 
     try {
       const updatedAppointment = await appointment.save();

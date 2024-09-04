@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
    Skeleton,
    Alert,
@@ -121,19 +121,22 @@ const AppointmentDescription = () => {
       return <Alert message="Error" description="Appointment not found." type="error" />;
    }
 
-   // const toggleArchive = async () => {
-   //    try {
-   //       await axios.patch(`http://localhost:3000/api/appointments/${id}`, {
-   //          isArchived: !isArchived,
-   //          config
-   //       });
-   //       setIsArchived(!isArchived);
-   //       message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
-   //       revalidateAppointment();
-   //    } catch (error) {
-   //       message.error("Failed to update the archive status.");
-   //    }
-   // };
+   const toggleArchive = async () => {
+      try {
+         await axios.patch(
+            `http://localhost:3000/api/appointments/${id}/archive`,
+            {
+               isArchived: !isArchived,
+            },
+            config
+         );
+         setIsArchived(!isArchived);
+         message.success(`Appointment ${!isArchived ? "archived" : "unarchived"} successfully.`);
+         revalidateAppointment();
+      } catch (error) {
+         message.error("Failed to update the archive status.");
+      }
+   };
 
    const handleEdit = () => {
       setIsModalOpen(true);
@@ -141,7 +144,7 @@ const AppointmentDescription = () => {
 
    const handleDelete = async () => {
       try {
-         await axios.delete(`http://localhost:3000/api/appointments/${id}`,config);
+         await axios.delete(`http://localhost:3000/api/appointments/${id}`, config);
          message.success("Appointment deleted successfully.");
          revalidateAppointment();
       } catch (error) {
@@ -168,7 +171,7 @@ const AppointmentDescription = () => {
             isArchived,
          };
 
-         await axios.patch(`http://localhost:3000/api/appointments/${id}`, updatedAppointment,config);
+         await axios.patch(`http://localhost:3000/api/appointments/${id}`, updatedAppointment, config);
 
          message.success("Appointment updated successfully.");
          setIsModalOpen(false);
@@ -202,7 +205,7 @@ const AppointmentDescription = () => {
          };
 
          // post
-         const invoiceResponse = await axios.post(`http://localhost:3000/api/invoices`, newInvoice,config);
+         const invoiceResponse = await axios.post(`http://localhost:3000/api/invoices`, newInvoice, config);
          const createdInvoice = invoiceResponse.data;
 
          const invoiceItems = items.map((item: any) => ({
@@ -213,7 +216,7 @@ const AppointmentDescription = () => {
          }));
 
          await Promise.all(
-            invoiceItems.map((item: any) => axios.post(`http://localhost:3000/api/invoice-items`, item,config))
+            invoiceItems.map((item: any) => axios.post(`http://localhost:3000/api/invoice-items`, item, config))
          );
 
          message.success("Invoice and items created successfully.");
@@ -253,7 +256,7 @@ const AppointmentDescription = () => {
                >
                   <Button danger>Delete</Button>
                </Popconfirm>
-               {/* <Button onClick={toggleArchive}>{isArchived ? "Unarchive" : "Archive"}</Button> */}
+               <Button onClick={toggleArchive}>{isArchived ? "Unarchive" : "Archive"}</Button>
             </Space>
          </div>
          <Descriptions layout="vertical" bordered>
