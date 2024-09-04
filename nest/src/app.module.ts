@@ -13,7 +13,7 @@ import { StoresModule } from './modules/stores/stores.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { InvoiceItemsModule } from './modules/invoice-items/invoice-items.module';
 import { UsersModule } from './modules/users/users.module';
-
+import { LogzioLoggerService } from './logzio-logger.service';
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import { UsersModule } from './modules/users/users.module';
       database: 'letzfix',
       autoLoadModels: true,
       synchronize: true,
+      logging: false,
     }),
     StoresModule,
     CustomersModule,
@@ -40,6 +41,6 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LogzioLoggerService],
 })
 export class AppModule {}

@@ -7,6 +7,8 @@ import {
   Put,
   Delete,
   UseGuards,
+  Request,
+  NotFoundException,
 } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
@@ -23,26 +25,42 @@ export class InvoicesController {
     return this.invoicesService.create(createInvoiceDto);
   }
 
+  // @Get()
+  // findAll(): Promise<Invoice[]> {
+  //   return this.invoicesService.findAll();
+  // }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<Invoice[]> {
-    return this.invoicesService.findAll();
+  async findAppointments(@Request() req) {
+    const storeId = req.user.storeId;
+    const filteredInvoices =
+      await this.invoicesService.findAllByStoreId(storeId);
+    return filteredInvoices;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Invoice> {
-    return this.invoicesService.findOne(id);
+  async findOne(@Param('id') id: number, @Request() req) {
+    const storeId = req.user.storeId;
+    const invoice = await this.invoicesService.findOne(+id);
+    if (!invoice.storeId !== storeId) {
+      throw new NotFoundException("Invouice not found for this store");
   }
+  return invoice;
+}
+
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateInvoiceDto: UpdateInvoiceDto,
   ): Promise<Invoice> {
     return this.invoicesService.update(id, updateInvoiceDto);
   }
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: number): Promise<void> {
     return this.invoicesService.remove(id);
   }
 }

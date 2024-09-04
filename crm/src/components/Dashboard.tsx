@@ -102,7 +102,7 @@ const Dashboard = ({ logout }: DashboardProps) => {
                      paddingRight: "16px",
                   }}
                >
-                  <Button type="primary" onClick={handleLogout}>
+                  <Button type="primary" danger ghost onClick={handleLogout}>
                      Logout
                   </Button>
                </Header>
